@@ -5,10 +5,10 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
+    "google-adk>=0.1.0",
     "google-genai>=1.10.0",
     "Pillow",
     "pyautogui>=0.9.54",
-    "pyyaml>=6.0.2",
 ]
 
 [tool.ruff]

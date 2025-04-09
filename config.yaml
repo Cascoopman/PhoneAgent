@@ -1,5 +1,0 @@
-SCREENSHOT_DIR: "screenshots"
-GEMINI_MODEL: "gemini-2.5-pro-exp-03-25"
-GCP_LOCATION: "europe-west1"
-SCREEN_Y_BOUND: 1000
-SCREEN_X_BOUND: 300
