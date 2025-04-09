@@ -1,0 +1,4 @@
+SCREENSHOT_DIR: "screenshots"
+GEMINI_MODEL: "gemini-2.5-pro-exp-03-25"
+GCP_PROJECT_ID: "***"
+GCP_LOCATION: "europe-west1"

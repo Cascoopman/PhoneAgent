@@ -1,0 +1,77 @@
+from google import genai
+from google.genai import types
+from google.genai.types import ContentOrDict, Content, ContentDict
+from pydantic import BaseModel
+
+import yaml
+
+from tools import click_screen, swipe_screen, take_screenshot
+
+class ScreenshotAnalysis(BaseModel):
+    reasoning: str
+    decision: str
+
+with open("config.yaml", "r") as f:
+    config = yaml.safe_load(f)
+
+class PassPilot():
+    _instance = None
+
+    def __new__(cls, *args, **kwargs):
+        if not cls._instance:
+            cls._instance = super(PassPilot, cls).__new__(cls)
+        return cls._instance
+
+    def __init__(self):
+        self.client = genai.Client(
+            vertexai=True,
+            project=config["GCP_PROJECT_ID"],
+            location=config["GCP_LOCATION"],
+        )
+
+    def start_agent(self):
+        self.agent = self.client.aio.chats.create(
+            model=config["GEMINI_MODEL"],
+            config=types.GenerateContentConfig(
+                response_schema=ScreenshotAnalysis,
+                tools=[click_screen, swipe_screen],
+            ),
+        )
+
+    def create_response(self, image_path):
+        response = self.agent.send_message(
+            message=types.Content(
+                parts=[
+                    types.Image(
+                        file_uri=image_path,
+                        mime_type="image/png",
+                    )
+                ]
+            ),
+            config=types.GenerateContentConfig(
+                response_schema=ScreenshotAnalysis,
+                tools=[click_screen, swipe_screen],
+            ),
+        )
+
+    def get_response(self):
+        return self.agent.get_history()
+
+
+    def gemini_query(image_path):
+        response = client.models.generate_content(
+            model=config["GEMINI_MODEL"],
+            contents=[
+                "What is shown in this image?",
+                types.Part.from_file(
+                    file_uri=image_path,
+                    mime_type="image/png",
+                ),
+            ],
+            config=types.GenerateContentConfig(
+                system_instruction="You are a helpful assistant that analyzes screenshots and provides a concise summary of the content.",
+                response_schema=ScreenshotAnalysis,
+                tools=[click_screen, swipe_screen],
+                ),
+        )
+        return response.text
