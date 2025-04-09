@@ -60,22 +60,3 @@ class PassPilot():
 
     def get_response(self):
         return self.agent.get_history()
-
-
-    def gemini_query(image_path):
-        response = client.models.generate_content(
-            model=config["GEMINI_MODEL"],
-            contents=[
-                "What is shown in this image?",
-                types.Part.from_file(
-                    file_uri=image_path,
-                    mime_type="image/png",
-                ),
-            ],
-            config=types.GenerateContentConfig(
-                system_instruction="You are a helpful assistant that analyzes screenshots and provides a concise summary of the content.",
-                response_schema=ScreenshotAnalysis,
-                tools=[click_screen, swipe_screen],
-                ),
-        )
-        return response.text
