@@ -4,8 +4,12 @@ from google.genai.types import ContentOrDict, Content, ContentDict
 from pydantic import BaseModel
 
 import yaml
-
+import os
+from dotenv import load_dotenv
 from tools import click_screen, swipe_screen, take_screenshot
+
+load_dotenv()
+
 
 class ScreenshotAnalysis(BaseModel):
     reasoning: str
@@ -25,7 +29,7 @@ class PassPilot():
     def __init__(self):
         self.client = genai.Client(
             vertexai=True,
-            project=config["GCP_PROJECT_ID"],
+            project=os.getenv("GCP_PROJECT_ID"),
             location=config["GCP_LOCATION"],
         )
 
