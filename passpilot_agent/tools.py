@@ -3,12 +3,14 @@ import os
 import subprocess
 import sys
 from datetime import datetime
+from typing import Callable
 
 import pyautogui
 from dotenv import load_dotenv
 from google.adk.tools import ToolContext
 from google.genai import types
 from PIL import Image
+from pydantic import BaseModel
 
 load_dotenv()
 
@@ -18,6 +20,35 @@ config = {
     "SCREEN_X_BOUND": int(os.getenv("SCREEN_X_BOUND")),
 }
 
+class Callback(BaseModel):
+    before_model_callback: Callable
+    after_model_callback: Callable
+    before_agent_callback: Callable
+    after_agent_callback: Callable
+
+class Tool(BaseModel):
+    before_tool_callback: Callable
+    tool_function: Callable
+    after_tool_callback: Callable
+
+    def before_model_callback(
+        self, callback_context: CallbackContext, llm_request: LlmRequest
+    ) -> None:
+        pass
+
+class ToolContext(BaseModel):
+    tools: List[Tool]
+
+    def get_tools(self) -> List[Tool]:
+        return self.tools
+
+    def get_tool_by_name(self, name: str) -> Tool:
+        for tool in self.tools:
+            if tool.name == name:
+                return tool
+
+    def add_tool(self, tool: Tool):
+        self.tools.append(tool)
 
 def click_screen(x: int, y: int) -> dict:
     """
