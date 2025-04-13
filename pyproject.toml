@@ -7,6 +7,8 @@ requires-python = ">=3.12"
 dependencies = [
     "google-adk>=0.1.0",
     "google-genai>=1.10.0",
+    "numpy>=2.2.4",
+    "opencv-python>=4.11.0.86",
     "Pillow",
     "pyautogui>=0.9.54",
 ]

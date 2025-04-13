@@ -1,79 +1,118 @@
 import io
 import os
-import subprocess
+import subprocess  # nosec
 import sys
+import time
 from datetime import datetime
-from typing import Callable
 
 import pyautogui
 from dotenv import load_dotenv
-from google.adk.tools import ToolContext
 from google.genai import types
+from google.adk.tools import ToolContext
 from PIL import Image
-from pydantic import BaseModel
+
+# Import the button detection function
+from vision import detect_buttons
 
 load_dotenv()
 
 config = {
     "SCREENSHOT_DIR": os.getenv("SCREENSHOT_DIR"),
-    "SCREEN_Y_BOUND": int(os.getenv("SCREEN_Y_BOUND")),
-    "SCREEN_X_BOUND": int(os.getenv("SCREEN_X_BOUND")),
+    "SCREEN_Y_BOUND": int(os.getenv("MIRRORING_Y_BOUND")),
+    "SCREEN_X_BOUND": int(os.getenv("MIRRORING_X_BOUND")),
+    "SCREEN_Y_INVERSION": int(os.getenv("SCREEN_Y_INVERSION")),
+    "HOME_BUTTON_X": int(os.getenv("HOME_BUTTON_X")),
+    "HOME_BUTTON_Y": int(os.getenv("HOME_BUTTON_Y")),
 }
 
-class Callback(BaseModel):
-    before_model_callback: Callable
-    after_model_callback: Callable
-    before_agent_callback: Callable
-    after_agent_callback: Callable
 
-class Tool(BaseModel):
-    before_tool_callback: Callable
-    tool_function: Callable
-    after_tool_callback: Callable
-
-    def before_model_callback(
-        self, callback_context: CallbackContext, llm_request: LlmRequest
-    ) -> None:
-        pass
-
-class ToolContext(BaseModel):
-    tools: List[Tool]
-
-    def get_tools(self) -> List[Tool]:
-        return self.tools
-
-    def get_tool_by_name(self, name: str) -> Tool:
-        for tool in self.tools:
-            if tool.name == name:
-                return tool
-
-    def add_tool(self, tool: Tool):
-        self.tools.append(tool)
-
-def click_screen(x: int, y: int) -> dict:
+def home_screen():
     """
-    This tool is used to click on the screen at the given coordinates.
-
-    Args:
-        x (int): The x coordinate to click on.
-        y (int): The y coordinate to click on.
+    This tool is used to go back to the iPhone home screen.
     """
-    if y > config["SCREEN_Y_BOUND"] or x > config["SCREEN_X_BOUND"]:
-        return {
-            "status": "error",
-            "message": (
-                "Invalid coordinates. "
-                "Please provide coordinates within the screen bounds. "
-                f"Screen bounds are {config['SCREEN_X_BOUND']}x{config['SCREEN_Y_BOUND']}."
-            ),
-        }
+    x = config["HOME_BUTTON_X"]
+    y = config["HOME_BUTTON_Y"]
+    y = config["SCREEN_Y_INVERSION"] - y
 
-    y = config["SCREEN_Y_BOUND"] - y
-    pyautogui.click(x, y)
+    pyautogui.moveTo(x, y)
+    time.sleep(0.1)  # Let the UI update
+    pyautogui.click()
+    time.sleep(0.1)
     return {"status": "ok"}
 
 
-def swipe_screen(x_offset: int, y_offset: int) -> dict:
+def move_pointer_to_position(x: int, y: int) -> dict:
+    """
+    This tool is used to move the pointer to the exact coordinates.
+    The coordinates are percentages of the screen size.
+    X is horizontal and Y is vertical.
+    X=0 is left edge of the screen and X=100 is the right edge.
+    Y=0 is the bottom edge of the screen and Y=100 is the top edge.
+
+    Args:
+        x (int): The x coordinate to move to, in percentage of the screen width.
+        y (int): The y coordinate to move to, in percentage of the screen heights.
+    """
+    if x > 100 or y > 100 or x < 0 or y < 0:
+        return {
+            "status": "error",
+            "message": "Invalid coordinates. The values should be between 0 and 100.",
+        }
+
+    x = config["SCREEN_X_BOUND"] * (x / 100)
+    y = config["SCREEN_Y_BOUND"] * (y / 100)
+    y = config["SCREEN_Y_INVERSION"] - y
+
+    pyautogui.moveTo(x, y)
+    time.sleep(0.1)  # Let the UI update
+    return {"status": "ok"}
+
+
+def move_pointer_from_current_to(x: int, y: int) -> dict:
+    """
+    This tool is used to move the pointer relative from the current position.
+
+    Args:
+        x (int): The x distance to move, in absolute percentage of the screen width.
+        y (int): The y distance to move, in absolute percentage of the screen heights.
+    """
+    current_x, current_y = pyautogui.position()
+
+    x = config["SCREEN_X_BOUND"] * (x / 100)
+    y = config["SCREEN_Y_BOUND"] * (y / 100)
+    y = config["SCREEN_Y_INVERSION"] - y
+
+    new_x = current_x + x
+    new_y = current_y + y
+
+    if new_x > config["SCREEN_X_BOUND"] or new_x < 0:
+        return {
+            "status": "error",
+            "message": "Invalid x coordinate. The values should be between 0 and 100.",
+        }
+    if new_y > config["SCREEN_Y_BOUND"] or new_y < 0:
+        return {
+            "status": "error",
+            "message": "Invalid y coordinate. The values should be between 0 and 100.",
+        }
+
+    pyautogui.moveTo(new_x, new_y)
+    time.sleep(0.1)
+    return {"status": "ok"}
+
+
+def click_pointer() -> dict:
+    """
+    This tool is used to click on the iPhone screen at the current pointer position.
+    """
+    pyautogui.click()
+    time.sleep(0.1)
+    pyautogui.click()
+    time.sleep(0.1)
+    return {"status": "ok"}
+
+
+def _swipe_screen(x_offset: int, y_offset: int) -> dict:
     """
     Performs a mouse drag relative from its current position.
 
@@ -82,63 +121,98 @@ def swipe_screen(x_offset: int, y_offset: int) -> dict:
         y_offset (int): The y offset to drag to.
     """
     y_offset = -y_offset
-    pyautogui.drag(x_offset, y_offset, button="left")
+    pyautogui.drag(x_offset, y_offset, duration=0.15, button="left")
+    time.sleep(0.1)
     return {"status": "ok"}
 
 
-def take_screenshot(tool_context: ToolContext) -> dict:
+def swipe_left() -> dict:
     """
-    This tool is used to take a screenshot of the iPhone display and stores it
-    as an image artifact.
+    This tool is used to swipe left on the iPhone screen.
+    """
+    return _swipe_screen(-100, 0)
 
-    Returns:
-        dict: A dictionary containing the status and the filename of
-        the saved screenshot artifact.
+
+def swipe_right() -> dict:
+    """
+    This tool is used to swipe right on the iPhone screen.
+    """
+    return _swipe_screen(100, 0)
+
+
+def swipe_up() -> dict:
+    """
+    This tool is used to swipe up on the iPhone screen.
+    """
+    return _swipe_screen(0, -100)
+
+
+def swipe_down() -> dict:
+    """
+    This tool is used to swipe down on the iPhone screen.
+    """
+    return _swipe_screen(0, 100)
+
+
+def enter_keys(keys: str) -> dict:
+    """
+    This tool is used to enter keys on the iPhone screen.
+    """
+    try:
+        for key in keys:
+            pyautogui.press(key)
+            time.sleep(0.1)
+    except Exception as e:
+        return {"status": "error", "message": f"Error entering keys: {str(e)}"}
+    return {"status": "ok"}
+
+def take_screenshot(tool_context: ToolContext):
+    """
+    This tool is used to take a screenshot of the iPhone display and stores it.
     """
     # Ensure the screenshot directory exists
     os.makedirs(config["SCREENSHOT_DIR"], exist_ok=True)
 
     # Generate timestamped filename
-    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    screenshot_path = os.path.join(config["SCREENSHOT_DIR"], f"{timestamp}.png")
+    name = datetime.now().strftime("%Y%m%d_%H%M%S") + ".png"
+    screenshot_path = os.path.join(config["SCREENSHOT_DIR"], name)
 
     try:
         # Use shell=True carefully, ensure command is safe
         # On macOS, screencapture is a safe, standard utility
         subprocess.run(
-            ["screencapture", screenshot_path],
+            ["screencapture", "-C", screenshot_path],
             check=True,
             capture_output=True,
             text=True,
         )
-        print("Screen capture successful.")
 
-        # Open the captured image
+        # Open the captured image with PIL
         with Image.open(screenshot_path) as img:
-            width, height = img.size
-            # Define the box for the left quarter
-            # (left, upper, right, lower)
-            left_quarter_box = (0, (height // 4), width // 4, height)
-            # Crop the image
-            cropped_img = img.crop(left_quarter_box)
+            left_quarter_box = tuple(map(int, os.getenv("IMAGE_CROP_BOX").split(",")))
+            # Crop the image using PIL
+            pil_cropped_img = img.crop(left_quarter_box)
+            pil_cropped_img.save(screenshot_path)
 
-            # Turn Image into ImageFile and save artifact
-            image_file = io.BytesIO()
-            cropped_img.save(image_file, format="PNG")
-            image_file.seek(0)  # Go to the beginning of the stream
-            img_byte_arr = image_file.getvalue()
+        #detect_buttons(screenshot_path)  # TODO: https://github.com/MulongXie/UIED
 
-            tool_context.save_artifact(
-                screenshot_path,
-                types.Part.from_bytes(data=img_byte_arr, mime_type="image/png"),
-            )
+        with Image.open(screenshot_path) as img:
+            img_byte_arr = io.BytesIO()
+            img.save(img_byte_arr, format="PNG")
+            img_byte_arr = img_byte_arr.getvalue()
 
-        return {"status": "ok", "filename": screenshot_path}
+        tool_context.save_artifact(
+            filename=name,
+            artifact=types.Part.from_bytes(
+                data=img_byte_arr,
+                mime_type="image/png",
+            ),
+        )
+        return {"status": "ok"}
 
     except subprocess.CalledProcessError as e:
         return {"status": "error", "message": f"Error capturing screen: {str(e)}"}
     except FileNotFoundError:
-        # print("Error: 'screencapture' command not found. Ensure you are on macOS.")
         return {
             "status": "error",
             "message": (
@@ -154,11 +228,10 @@ def take_screenshot(tool_context: ToolContext) -> dict:
 
 def finish():
     """
-    This tool is used to stop the process.
+    This tool is used to stop the password reset process.
     """
     sys.exit(0)
 
 
 if __name__ == "__main__":
-    click_screen(100, 100)
-    swipe_screen(100, 100)
+    take_screenshot(None)
