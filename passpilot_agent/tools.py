@@ -11,9 +11,6 @@ from google.genai import types
 from google.adk.tools import ToolContext
 from PIL import Image
 
-# Import the button detection function
-from vision import detect_buttons
-
 load_dotenv()
 
 config = {
@@ -194,7 +191,7 @@ def take_screenshot(tool_context: ToolContext):
             pil_cropped_img = img.crop(left_quarter_box)
             pil_cropped_img.save(screenshot_path)
 
-        #detect_buttons(screenshot_path)  # TODO: https://github.com/MulongXie/UIED
+        #detect_ui_elements(screenshot_path)  # TODO: https://github.com/nedimcanulusoy/ui-component-detection
 
         with Image.open(screenshot_path) as img:
             img_byte_arr = io.BytesIO()
