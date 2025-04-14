@@ -11,6 +11,7 @@ dependencies = [
     "opencv-python>=4.11.0.86",
     "Pillow",
     "pyautogui>=0.9.54",
+    "ultralytics>=8.3.23",
 ]
 
 [tool.ruff]

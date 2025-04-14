@@ -6,17 +6,14 @@ from google.adk.tools.load_artifacts_tool import load_artifacts_tool
 
 from .prompt import PROMPT
 from .tools import (
-    enter_keys,
-    swipe_left,
-    swipe_right,
-    swipe_up,
-    swipe_down,
-    move_pointer_to_position,
-    move_pointer_from_current_to,
     click_pointer,
-    take_screenshot,
-    home_screen,
+    enter_keys,
     finish,
+    home_screen,
+    move_pointer_from_current_to,
+    move_pointer_to_position,
+    swipe_screen,
+    take_screenshot,
 )
 
 load_dotenv()
@@ -30,12 +27,9 @@ root_agent = Agent(
         move_pointer_to_position,
         move_pointer_from_current_to,
         click_pointer,
-        swipe_left,
-        swipe_right,
-        swipe_up,
-        swipe_down,
+        swipe_screen,
         enter_keys,
-        take_screenshot,  # TODO: move vision logic to separate agent?
+        take_screenshot,
         load_artifacts_tool,
         home_screen,
         finish,

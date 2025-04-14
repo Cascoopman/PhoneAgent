@@ -4,12 +4,14 @@ import subprocess  # nosec
 import sys
 import time
 from datetime import datetime
+from enum import Enum
 
 import pyautogui
 from dotenv import load_dotenv
-from google.genai import types
 from google.adk.tools import ToolContext
+from google.genai import types
 from PIL import Image
+from vision import detect_ui_elements
 
 load_dotenv()
 
@@ -151,6 +153,24 @@ def swipe_down() -> dict:
     return _swipe_screen(0, 100)
 
 
+class SwipeDirection(Enum):
+    LEFT = "left"
+    RIGHT = "right"
+    UP = "up"
+    DOWN = "down"
+
+
+def swipe_screen(direction: SwipeDirection) -> dict:
+    if direction == SwipeDirection.LEFT:
+        return swipe_left()
+    elif direction == SwipeDirection.RIGHT:
+        return swipe_right()
+    elif direction == SwipeDirection.UP:
+        return swipe_up()
+    elif direction == SwipeDirection.DOWN:
+        return swipe_down()
+
+
 def enter_keys(keys: str) -> dict:
     """
     This tool is used to enter keys on the iPhone screen.
@@ -162,6 +182,7 @@ def enter_keys(keys: str) -> dict:
     except Exception as e:
         return {"status": "error", "message": f"Error entering keys: {str(e)}"}
     return {"status": "ok"}
+
 
 def take_screenshot(tool_context: ToolContext):
     """
@@ -191,7 +212,7 @@ def take_screenshot(tool_context: ToolContext):
             pil_cropped_img = img.crop(left_quarter_box)
             pil_cropped_img.save(screenshot_path)
 
-        #detect_ui_elements(screenshot_path)  # TODO: https://github.com/nedimcanulusoy/ui-component-detection
+        locations = detect_ui_elements(screenshot_path, screenshot_path)
 
         with Image.open(screenshot_path) as img:
             img_byte_arr = io.BytesIO()
@@ -205,7 +226,10 @@ def take_screenshot(tool_context: ToolContext):
                 mime_type="image/png",
             ),
         )
-        return {"status": "ok"}
+        if locations:
+            return {"status": "ok", "locations": locations}
+        else:
+            return {"status": "ok"}
 
     except subprocess.CalledProcessError as e:
         return {"status": "error", "message": f"Error capturing screen: {str(e)}"}
@@ -231,4 +255,4 @@ def finish():
 
 
 if __name__ == "__main__":
-    take_screenshot(None)
+    print(take_screenshot(None))
