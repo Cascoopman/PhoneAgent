@@ -11,7 +11,7 @@ from dotenv import load_dotenv
 from google.adk.tools import ToolContext
 from google.genai import types
 from PIL import Image
-from vision import detect_ui_elements
+from passpilot_agent.vision import detect_ui_elements
 
 load_dotenv()
 
