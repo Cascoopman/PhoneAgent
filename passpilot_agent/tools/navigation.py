@@ -1,17 +1,8 @@
-import io
 import os
-import subprocess  # nosec
-import sys
 import time
-from datetime import datetime
-from enum import Enum
 
 import pyautogui
 from dotenv import load_dotenv
-from google.adk.tools import ToolContext
-from google.genai import types
-from PIL import Image
-from passpilot_agent.tools.vision import detect_ui_elements
 
 load_dotenv()
 

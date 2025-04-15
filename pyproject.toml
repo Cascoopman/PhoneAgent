@@ -20,3 +20,6 @@ select = ["E", "W", "F"]
 
 [tool.isort]
 profile = "black"
+
+[tool.poetry.group.dev.dependencies]
+pre-commit = "^3.7.1"
