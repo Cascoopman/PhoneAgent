@@ -8,11 +8,25 @@ from dotenv import load_dotenv
 from PIL import Image
 from shapely.geometry import box as shapely_box
 from ultralytics import YOLO
+import io
+import os
+import subprocess  # nosec
+import sys
+import time
+from datetime import datetime
+from enum import Enum
+
+import pyautogui
+from dotenv import load_dotenv
+from google.adk.tools import ToolContext
+from google.genai import types
+from PIL import Image
+from passpilot_agent.tools.vision import detect_ui_elements
 
 load_dotenv()
 
 config = {
-    "PATH_TO_MODEL": "model/weights.pt",
+    "PATH_TO_MODEL": os.getenv("PATH_TO_MODEL"),
     "CONFIDENCE_THRESHOLD": float(os.getenv("CONFIDENCE_THRESHOLD", 0.5)),
     "OVERLAP_THRESHOLD": float(os.getenv("OVERLAP_THRESHOLD", 0.5)),
     "PROXIMITY_THRESHOLD": float(os.getenv("PROXIMITY_THRESHOLD", 10.0)),
@@ -198,3 +212,67 @@ def detect_ui_elements(image_file, output_file) -> dict:
     width, height = image.size
 
     return format_output(final_results, width, height)
+
+
+def take_screenshot(tool_context: ToolContext):
+    """
+    This tool is used to take a screenshot of the iPhone display and stores it.
+    """
+    # Ensure the screenshot directory exists
+    os.makedirs(config["SCREENSHOT_DIR"], exist_ok=True)
+
+    # Generate timestamped filename
+    name = datetime.now().strftime("%Y%m%d_%H%M%S") + ".png"
+    screenshot_path = os.path.join(config["SCREENSHOT_DIR"], name)
+
+    try:
+        # Use shell=True carefully, ensure command is safe
+        # On macOS, screencapture is a safe, standard utility
+        subprocess.run(  # nosec
+            ["screencapture", "-C", screenshot_path],
+            check=True,
+            capture_output=True,
+            text=True,
+        )
+
+        # Open the captured image with PIL
+        with Image.open(screenshot_path) as img:
+            left_quarter_box = tuple(map(int, os.getenv("IMAGE_CROP_BOX").split(",")))
+            # Crop the image using PIL
+            pil_cropped_img = img.crop(left_quarter_box)
+            pil_cropped_img.save(screenshot_path)
+
+        locations = detect_ui_elements(screenshot_path, screenshot_path)
+
+        with Image.open(screenshot_path) as img:
+            img_byte_arr = io.BytesIO()
+            img.save(img_byte_arr, format="PNG")
+            img_byte_arr = img_byte_arr.getvalue()
+
+        tool_context.save_artifact(
+            filename=name,
+            artifact=types.Part.from_bytes(
+                data=img_byte_arr,
+                mime_type="image/png",
+            ),
+        )
+        if locations:
+            return {"status": "ok", "locations": locations}
+        else:
+            return {"status": "ok"}
+
+    except subprocess.CalledProcessError as e:
+        return {"status": "error", "message": f"Error capturing screen: {str(e)}"}
+    except FileNotFoundError:
+        return {
+            "status": "error",
+            "message": (
+                "Error: 'screencapture' command not found. Ensure you are on macOS."
+            ),
+        }
+    except Exception as e:
+        return {
+            "status": "error",
+            "message": f"An error occurred during image processing: {e}",
+        }
+

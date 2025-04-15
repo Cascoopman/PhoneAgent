@@ -1,37 +1,28 @@
 import os
-
+import jinja2
 from dotenv import load_dotenv
 from google.adk.agents import Agent
 from google.adk.tools.load_artifacts_tool import load_artifacts_tool
 
-from .prompt import PROMPT
-from .tools import (
-    click_pointer,
-    enter_keys,
-    finish,
-    home_screen,
-    move_pointer_from_current_to,
-    move_pointer_to_position,
-    swipe_screen,
-    take_screenshot,
-)
+from passpilot_agent.tools import tools_list
 
 load_dotenv()
+
+# Load prompt from Jinja template
+env = jinja2.Environment(
+    loader=jinja2.FileSystemLoader(os.path.dirname(__file__)),
+    autoescape=jinja2.select_autoescape(),
+)
+template = env.get_template("prompt.j2")
+PROMPT_TEXT = template.render()  # https://cookbook.openai.com/examples/gpt4-1_prompting_guide
 
 root_agent = Agent(
     name="passpilot_agent",
     model=os.getenv("GEMINI_MODEL"),
     description="Reset password agent.",
-    instruction=PROMPT,
+    instruction=PROMPT_TEXT,
     tools=[
-        move_pointer_to_position,
-        move_pointer_from_current_to,
-        click_pointer,
-        swipe_screen,
-        enter_keys,
-        take_screenshot,
         load_artifacts_tool,
-        home_screen,
-        finish,
+        *tools_list,
     ],
 )

@@ -11,7 +11,7 @@ from dotenv import load_dotenv
 from google.adk.tools import ToolContext
 from google.genai import types
 from PIL import Image
-from passpilot_agent.vision import detect_ui_elements
+from passpilot_agent.tools.vision import detect_ui_elements
 
 load_dotenv()
 
@@ -153,21 +153,23 @@ def swipe_down() -> dict:
     return _swipe_screen(0, 100)
 
 
-class SwipeDirection(Enum):
-    LEFT = "left"
-    RIGHT = "right"
-    UP = "up"
-    DOWN = "down"
+def swipe_screen(direction: str) -> dict:
+    """
+    This tool is used to swipe on the iPhone screen.
 
+    Args:
+        direction (str): The direction to swipe.
 
-def swipe_screen(direction: SwipeDirection) -> dict:
-    if direction == SwipeDirection.LEFT:
+    Returns:
+        dict: The outcome of the swipe, either "ok" or "error".
+    """
+    if direction == "left":
         return swipe_left()
-    elif direction == SwipeDirection.RIGHT:
+    elif direction == "right":
         return swipe_right()
-    elif direction == SwipeDirection.UP:
+    elif direction == "up":
         return swipe_up()
-    elif direction == SwipeDirection.DOWN:
+    elif direction == "down":
         return swipe_down()
 
 
@@ -183,76 +185,11 @@ def enter_keys(keys: str) -> dict:
         return {"status": "error", "message": f"Error entering keys: {str(e)}"}
     return {"status": "ok"}
 
-
-def take_screenshot(tool_context: ToolContext):
-    """
-    This tool is used to take a screenshot of the iPhone display and stores it.
-    """
-    # Ensure the screenshot directory exists
-    os.makedirs(config["SCREENSHOT_DIR"], exist_ok=True)
-
-    # Generate timestamped filename
-    name = datetime.now().strftime("%Y%m%d_%H%M%S") + ".png"
-    screenshot_path = os.path.join(config["SCREENSHOT_DIR"], name)
-
-    try:
-        # Use shell=True carefully, ensure command is safe
-        # On macOS, screencapture is a safe, standard utility
-        subprocess.run(
-            ["screencapture", "-C", screenshot_path],
-            check=True,
-            capture_output=True,
-            text=True,
-        )
-
-        # Open the captured image with PIL
-        with Image.open(screenshot_path) as img:
-            left_quarter_box = tuple(map(int, os.getenv("IMAGE_CROP_BOX").split(",")))
-            # Crop the image using PIL
-            pil_cropped_img = img.crop(left_quarter_box)
-            pil_cropped_img.save(screenshot_path)
-
-        locations = detect_ui_elements(screenshot_path, screenshot_path)
-
-        with Image.open(screenshot_path) as img:
-            img_byte_arr = io.BytesIO()
-            img.save(img_byte_arr, format="PNG")
-            img_byte_arr = img_byte_arr.getvalue()
-
-        tool_context.save_artifact(
-            filename=name,
-            artifact=types.Part.from_bytes(
-                data=img_byte_arr,
-                mime_type="image/png",
-            ),
-        )
-        if locations:
-            return {"status": "ok", "locations": locations}
-        else:
-            return {"status": "ok"}
-
-    except subprocess.CalledProcessError as e:
-        return {"status": "error", "message": f"Error capturing screen: {str(e)}"}
-    except FileNotFoundError:
-        return {
-            "status": "error",
-            "message": (
-                "Error: 'screencapture' command not found. Ensure you are on macOS."
-            ),
-        }
-    except Exception as e:
-        return {
-            "status": "error",
-            "message": f"An error occurred during image processing: {e}",
-        }
-
-
-def finish():
-    """
-    This tool is used to stop the password reset process.
-    """
-    sys.exit(0)
-
-
-if __name__ == "__main__":
-    print(take_screenshot(None))
+navigation_tools = [
+    home_screen,
+    move_pointer_to_position,
+    move_pointer_from_current_to,
+    click_pointer,
+    swipe_screen,
+    enter_keys,
+]
