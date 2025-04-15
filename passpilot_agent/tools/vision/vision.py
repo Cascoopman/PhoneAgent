@@ -206,8 +206,12 @@ def detect_ui_elements(image_file, output_file) -> dict:
 
 
 def take_screenshot(tool_context: ToolContext):
-    """
-    This tool is used to take a screenshot of the iPhone display and stores it.
+    """Take a screenshot of the display and store it to the local directory.
+    Important:
+        To view the screenshot, you must load the image.
+    
+    Returns:
+        dict: The outcome of the screenshot process, either "ok" or "error".
     """
     # Ensure the screenshot directory exists
     os.makedirs(config["SCREENSHOT_DIR"], exist_ok=True)

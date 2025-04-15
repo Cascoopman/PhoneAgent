@@ -17,8 +17,11 @@ config = {
 
 
 def home_screen():
-    """
-    This tool is used to go back to the iPhone home screen.
+    """Go back to the home screen of the device.
+    The home screen contains the app icons.
+
+    Returns:
+        dict: The outcome of the home screen, either "ok" or "error".
     """
     x = config["HOME_BUTTON_X"]
     y = config["HOME_BUTTON_Y"]
@@ -31,17 +34,18 @@ def home_screen():
     return {"status": "ok"}
 
 
-def move_pointer_to_position(x: int, y: int) -> dict:
-    """
-    This tool is used to move the pointer to the exact coordinates.
-    The coordinates are percentages of the screen size.
-    X is horizontal and Y is vertical.
-    X=0 is left edge of the screen and X=100 is the right edge.
-    Y=0 is the bottom edge of the screen and Y=100 is the top edge.
+def move_pointer(x: int, y: int) -> dict:
+    """Move the pointer to the specified coordinates.
+    Important:
+        X ranges from 0 (left) to 100 (right).
+        Y ranges from 0 (bottom) to 100 (top).
 
     Args:
-        x (int): The x coordinate to move to, in percentage of the screen width.
-        y (int): The y coordinate to move to, in percentage of the screen heights.
+        x (int): The x coordinate to move to.
+        y (int): The y coordinate to move to.
+
+    Returns:
+        dict: The outcome of the move, either "ok" or "error".
     """
     if x > 100 or y > 100 or x < 0 or y < 0:
         return {
@@ -58,42 +62,13 @@ def move_pointer_to_position(x: int, y: int) -> dict:
     return {"status": "ok"}
 
 
-def move_pointer_from_current_to(x: int, y: int) -> dict:
-    """
-    This tool is used to move the pointer relative from the current position.
-
-    Args:
-        x (int): The x distance to move, in absolute percentage of the screen width.
-        y (int): The y distance to move, in absolute percentage of the screen heights.
-    """
-    current_x, current_y = pyautogui.position()
-
-    x = config["SCREEN_X_BOUND"] * (x / 100)
-    y = config["SCREEN_Y_BOUND"] * (y / 100)
-    y = config["SCREEN_Y_INVERSION"] - y
-
-    new_x = current_x + x
-    new_y = current_y + y
-
-    if new_x > config["SCREEN_X_BOUND"] or new_x < 0:
-        return {
-            "status": "error",
-            "message": "Invalid x coordinate. The values should be between 0 and 100.",
-        }
-    if new_y > config["SCREEN_Y_BOUND"] or new_y < 0:
-        return {
-            "status": "error",
-            "message": "Invalid y coordinate. The values should be between 0 and 100.",
-        }
-
-    pyautogui.moveTo(new_x, new_y)
-    time.sleep(0.1)
-    return {"status": "ok"}
-
-
 def click_pointer() -> dict:
-    """
-    This tool is used to click on the iPhone screen at the current pointer position.
+    """Click on the screen at the current pointer position.
+    Important:
+        The pointer must be moved to the desired position first.
+
+    Returns:
+        dict: The outcome of the click, either "ok" or "error".
     """
     pyautogui.click()
     time.sleep(0.1)
@@ -102,71 +77,59 @@ def click_pointer() -> dict:
     return {"status": "ok"}
 
 
-def _swipe_screen(x_offset: int, y_offset: int) -> dict:
-    """
-    Performs a mouse drag relative from its current position.
-
-    Args:
-        x_offset (int): The x offset to drag to.
-        y_offset (int): The y offset to drag to.
-    """
+def _drag_screen(x_offset: int, y_offset: int) -> dict:
     y_offset = -y_offset
     pyautogui.drag(x_offset, y_offset, duration=0.15, button="left")
     time.sleep(0.1)
     return {"status": "ok"}
 
 
-def swipe_left() -> dict:
-    """
-    This tool is used to swipe left on the iPhone screen.
-    """
-    return _swipe_screen(-100, 0)
+def _scroll_left() -> dict:
+    return _drag_screen(100, 0)
 
 
-def swipe_right() -> dict:
-    """
-    This tool is used to swipe right on the iPhone screen.
-    """
-    return _swipe_screen(100, 0)
+def _scroll_right() -> dict:
+    return _drag_screen(-100, 0)
 
 
-def swipe_up() -> dict:
-    """
-    This tool is used to swipe up on the iPhone screen.
-    """
-    return _swipe_screen(0, -100)
+def _scroll_up() -> dict:
+    return _drag_screen(0, 100)
 
 
-def swipe_down() -> dict:
-    """
-    This tool is used to swipe down on the iPhone screen.
-    """
-    return _swipe_screen(0, 100)
+def _scroll_down() -> dict:
+    return _drag_screen(0, -100)
 
 
-def swipe_screen(direction: str) -> dict:
-    """
-    This tool is used to swipe on the iPhone screen.
+def scroll_screen(direction: str) -> dict:
+    """Scroll across the screen in the specified direction.
+    Important: scrolling down will move the screen up and vice versa.
 
     Args:
         direction (str): The direction to swipe.
+        The direction can be "left", "right", "up", or "down".
 
     Returns:
         dict: The outcome of the swipe, either "ok" or "error".
     """
     if direction == "left":
-        return swipe_left()
+        return _scroll_left()
     elif direction == "right":
-        return swipe_right()
+        return _scroll_right()
     elif direction == "up":
-        return swipe_up()
+        return _scroll_up()
     elif direction == "down":
-        return swipe_down()
+        return _scroll_down()
 
 
 def enter_keys(keys: str) -> dict:
-    """
-    This tool is used to enter keys on the iPhone screen.
+    """Enter keys in the current selected text field.
+    Requires a text field to be selected first.
+
+    Args:
+        keys (str): The keys to enter in the text field.
+
+    Returns:
+        dict: The outcome of the key entry, either "ok" or "error".
     """
     try:
         for key in keys:
@@ -178,9 +141,8 @@ def enter_keys(keys: str) -> dict:
 
 navigation_tools = [
     home_screen,
-    move_pointer_to_position,
-    move_pointer_from_current_to,
+    move_pointer,
     click_pointer,
-    swipe_screen,
+    scroll_screen,
     enter_keys,
 ]
