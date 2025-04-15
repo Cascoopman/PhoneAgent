@@ -2,13 +2,14 @@ import io
 import math
 import os
 import subprocess  # nosec
-from datetime import datetime
+from typing import Optional
 
 import matplotlib.patches as patches
 import matplotlib.patheffects as path_effects
 import matplotlib.pyplot as plt
 from dotenv import load_dotenv
-from google.adk.tools import ToolContext
+from google.adk.agents.callback_context import CallbackContext
+from google.adk.models import LlmRequest, LlmResponse
 from google.genai import types
 from PIL import Image
 from shapely.geometry import box as shapely_box
@@ -22,6 +23,8 @@ config = {
     "OVERLAP_THRESHOLD": float(os.getenv("OVERLAP_THRESHOLD", 0.5)),
     "PROXIMITY_THRESHOLD": float(os.getenv("PROXIMITY_THRESHOLD", 10.0)),
     "FILTERING_SIZE_THRESHOLD": float(os.getenv("FILTERING_SIZE_THRESHOLD", 10.0)),
+    "SCREENSHOT_LOCATION": os.getenv("SCREENSHOT_LOCATION"),
+    "IMAGE_CROP_BOX": tuple(map(int, os.getenv("IMAGE_CROP_BOX").split(","))),
 }
 
 model = YOLO(config["PATH_TO_MODEL"])
@@ -205,24 +208,20 @@ def detect_ui_elements(image_file, output_file) -> dict:
     return format_output(final_results, width, height)
 
 
-def take_screenshot(tool_context: ToolContext):
+def take_screenshot():
     """Take a screenshot of the display and store it to the local directory.
     Important:
         To view the screenshot, you must load the image.
-    
+
     Returns:
         dict: The outcome of the screenshot process, either "ok" or "error".
     """
-    # Ensure the screenshot directory exists
-    os.makedirs(config["SCREENSHOT_DIR"], exist_ok=True)
-
-    # Generate timestamped filename
-    name = datetime.now().strftime("%Y%m%d_%H%M%S") + ".png"
-    screenshot_path = os.path.join(config["SCREENSHOT_DIR"], name)
+    os.makedirs(os.path.dirname(config["SCREENSHOT_LOCATION"]), exist_ok=True)
+    screenshot_path = config["SCREENSHOT_LOCATION"]
+    if os.path.exists(screenshot_path):
+        os.remove(screenshot_path)
 
     try:
-        # Use shell=True carefully, ensure command is safe
-        # On macOS, screencapture is a safe, standard utility
         subprocess.run(  # nosec
             ["screencapture", "-C", screenshot_path],
             check=True,
@@ -230,27 +229,14 @@ def take_screenshot(tool_context: ToolContext):
             text=True,
         )
 
-        # Open the captured image with PIL
+        # Crop the image using PIL
         with Image.open(screenshot_path) as img:
-            left_quarter_box = tuple(map(int, os.getenv("IMAGE_CROP_BOX").split(",")))
-            # Crop the image using PIL
+            left_quarter_box = config["IMAGE_CROP_BOX"]
             pil_cropped_img = img.crop(left_quarter_box)
             pil_cropped_img.save(screenshot_path)
 
         locations = detect_ui_elements(screenshot_path, screenshot_path)
 
-        with Image.open(screenshot_path) as img:
-            img_byte_arr = io.BytesIO()
-            img.save(img_byte_arr, format="PNG")
-            img_byte_arr = img_byte_arr.getvalue()
-
-        tool_context.save_artifact(
-            filename=name,
-            artifact=types.Part.from_bytes(
-                data=img_byte_arr,
-                mime_type="image/png",
-            ),
-        )
         if locations:
             return {"status": "ok", "locations": locations}
         else:
@@ -271,3 +257,38 @@ def take_screenshot(tool_context: ToolContext):
             "message": f"An error occurred during image processing: {e}",
         }
 
+
+def load_screenshot(
+    callback_context: CallbackContext, llm_request: LlmRequest
+) -> Optional[LlmResponse]:
+    """Before model callback that automatically loads the screenshot."""
+    if llm_request.contents and llm_request.contents[-1].role == "user":
+        if llm_request.contents[-1].parts:
+            if (
+                llm_request.contents[-1].parts[0].function_response
+                and llm_request.contents[-1].parts[0].function_response.name
+                == "take_screenshot"
+            ):
+                screenshot_path = config["SCREENSHOT_LOCATION"]
+
+                if os.path.exists(screenshot_path):
+                    screenshot_image = Image.open(screenshot_path)
+
+                    with io.BytesIO() as output:
+                        screenshot_image.save(output, format="PNG")
+                        screenshot_bytes = output.getvalue()
+
+                    screenshot_content = types.Content(
+                        parts=[
+                            types.Part.from_bytes(
+                                data=screenshot_bytes, mime_type="image/png"
+                            )
+                        ],
+                        role="user",
+                    )
+
+                    llm_response = LlmResponse(
+                        content=screenshot_content,
+                    )
+                    return llm_response
+    pass

@@ -13,7 +13,7 @@ wheels/
 .env
 
 # Screenshots
-screenshots/
+passpilot_agent/tools/vision/data/
 
 # Mac
 .DS_Store

@@ -3,8 +3,8 @@ import os
 import jinja2
 from dotenv import load_dotenv
 from google.adk.agents import Agent
-from google.adk.tools.load_artifacts_tool import load_artifacts_tool
 
+from passpilot_agent.library.callbacks import before_model_callback
 from passpilot_agent.tools import tools_list
 
 load_dotenv()
@@ -23,7 +23,7 @@ root_agent = Agent(
     description="Reset password agent.",
     instruction=PROMPT_TEXT,
     tools=[
-        load_artifacts_tool,
         *tools_list,
     ],
+    before_model_callback=before_model_callback,
 )

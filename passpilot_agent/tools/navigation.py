@@ -7,7 +7,6 @@ from dotenv import load_dotenv
 load_dotenv()
 
 config = {
-    "SCREENSHOT_DIR": os.getenv("SCREENSHOT_DIR"),
     "SCREEN_Y_BOUND": int(os.getenv("MIRRORING_Y_BOUND")),
     "SCREEN_X_BOUND": int(os.getenv("MIRRORING_X_BOUND")),
     "SCREEN_Y_INVERSION": int(os.getenv("SCREEN_Y_INVERSION")),
@@ -138,6 +137,7 @@ def enter_keys(keys: str) -> dict:
     except Exception as e:
         return {"status": "error", "message": f"Error entering keys: {str(e)}"}
     return {"status": "ok"}
+
 
 navigation_tools = [
     home_screen,
