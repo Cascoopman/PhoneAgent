@@ -1263,7 +1263,7 @@ wheels = [
 ]
 
 [[package]]
-name = "passpilot"
+name = "phonepilot"
 version = "0.1.0"
 source = { virtual = "." }
 dependencies = [

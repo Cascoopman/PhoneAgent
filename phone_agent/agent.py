@@ -4,8 +4,8 @@ import jinja2
 from dotenv import load_dotenv
 from google.adk.agents import Agent
 
-from passpilot_agent.library.callbacks import before_model_callback
-from passpilot_agent.tools import tools_list
+from phone_agent.library.callbacks import before_model_callback
+from phone_agent.tools import tools_list
 
 load_dotenv()
 
@@ -18,10 +18,10 @@ template = env.get_template("prompt.j2")
 PROMPT_TEXT = template.render()  # https://cookbook.openai.com/examples/gpt4-1_prompting_guide
 
 root_agent = Agent(
-    name="passpilot_agent",
+    name="phone_agent",
     model=os.getenv("GEMINI_MODEL"),
-    description="Reset password agent.",
-    instruction=PROMPT_TEXT,
+    description="Agent that can control the user's mobile device.",
+    instruction=PROMPT_TEXT,  # TODO: Remove implicit instructions.
     tools=[
         *tools_list,
     ],
