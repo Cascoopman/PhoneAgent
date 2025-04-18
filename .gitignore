@@ -13,7 +13,7 @@ wheels/
 .env
 
 # Screenshots
-phone_agent/tools/vision/data/
+phone_agent/data/
 
 # Mac
 .DS_Store

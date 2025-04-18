@@ -35,9 +35,6 @@ def home_screen():
 
 def move_pointer(x: int, y: int) -> dict:
     """Move the pointer to the specified coordinates.
-    Important:
-        X ranges from 0 (left) to 100 (right).
-        Y ranges from 0 (bottom) to 100 (top).
 
     Args:
         x (int): The x coordinate to move to.
@@ -46,14 +43,21 @@ def move_pointer(x: int, y: int) -> dict:
     Returns:
         dict: The outcome of the move, either "ok" or "error".
     """
-    if x > 100 or y > 100 or x < 0 or y < 0:
+    if x > config["SCREEN_X_BOUND"] or x < 0:
         return {
             "status": "error",
-            "message": "Invalid coordinates. The values should be between 0 and 100.",
+            "message": f"""Invalid coordinates.
+            The x values should be between 0 and {config["SCREEN_X_BOUND"]}.
+            """,
+        }
+    if y > config["SCREEN_Y_BOUND"] or y < 0:
+        return {
+            "status": "error",
+            "message": f"""Invalid coordinates.
+            The y values should be between 0 and {config["SCREEN_Y_BOUND"]}.
+            """,
         }
 
-    x = config["SCREEN_X_BOUND"] * (x / 100)
-    y = config["SCREEN_Y_BOUND"] * (y / 100)
     y = config["SCREEN_Y_INVERSION"] - y
 
     pyautogui.moveTo(x, y)
@@ -139,10 +143,5 @@ def enter_keys(keys: str) -> dict:
     return {"status": "ok"}
 
 
-navigation_tools = [
-    home_screen,
-    move_pointer,
-    click_pointer,
-    scroll_screen,
-    enter_keys,
-]
+if __name__ == "__main__":
+    print(move_pointer(191, 609))

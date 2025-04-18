@@ -1,0 +1,14 @@
+Return bounding boxes as a JSON array with labels.
+Never return masks or code fencing.
+Limit the amount of objects to 10.
+Pick the most frequently used elements.
+If an object is present multiple times, name them according to their unique
+characteristic (colors, size, position, unique characteristics, etc..).
+Output the positions in [y1 x1 y2 x2] format.
+
+The objective is to detect UI elements in a screenshot of a mobile device.
+The UI elements are the ones that the user can interact with.
+For example, a button, a link, a text input, etc.
+
+Avoid overlapping objects.
+If an object is overlapping with another object, return the most important.
