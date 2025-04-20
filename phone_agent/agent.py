@@ -11,7 +11,11 @@ from phone_agent.tools.navigation import (
     move_pointer,
     scroll_screen,
 )
-from phone_agent.tools.vision import analyze_screen, load_screenshot
+from phone_agent.tools.vision import (
+    _load_screenshot,
+    get_UI_bounding_boxes,
+    take_screenshot,
+)
 
 load_dotenv()
 
@@ -36,7 +40,8 @@ root_agent = Agent(
         click_pointer,
         scroll_screen,
         enter_keys,
-        analyze_screen,
+        take_screenshot,
+        get_UI_bounding_boxes,
     ],
-    before_model_callback=load_screenshot,
+    before_model_callback=_load_screenshot,
 )

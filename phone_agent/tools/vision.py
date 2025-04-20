@@ -26,7 +26,11 @@ config = {
     "MIRRORING_X_BOUND": int(os.getenv("MIRRORING_X_BOUND")),
     "MIRRORING_Y_BOUND": int(os.getenv("MIRRORING_Y_BOUND")),
     "SCREEN_Y_INVERSION": int(os.getenv("SCREEN_Y_INVERSION")),
+    "CONVERSION_WIDTH": int(os.getenv("CONVERSION_WIDTH")),
+    "CONVERSION_HEIGHT": int(os.getenv("CONVERSION_HEIGHT")),
 }
+
+os.makedirs(os.path.dirname(config["SCREENSHOT_LOCATION"]), exist_ok=True)
 
 
 def parse_json(json_output: str):
@@ -35,7 +39,7 @@ def parse_json(json_output: str):
     for i, line in enumerate(lines):
         if line == "```json":
             json_output = "\n".join(
-                lines[i + 1:]
+                lines[i + 1 :]
             )  # Remove everything before "```json"
             json_output = json_output.split("```")[
                 0
@@ -132,7 +136,7 @@ def get_instructions() -> str:
     return template.render()
 
 
-def gemini_spatial_understanding(image) -> dict:
+def gemini_spatial_understanding(image, prompt) -> list[dict]:
     """github/google-gemini/cookbook/Spatial_understanding.ipynb"""
     safety_settings = [
         types.SafetySetting(
@@ -148,7 +152,10 @@ def gemini_spatial_understanding(image) -> dict:
     # Run model to find bounding boxes
     response = client.models.generate_content(
         model=config["GEMINI_PRO_MODEL"],
-        contents=["Here is the screenshot: ", im],
+        contents=[
+            "Here is what you should focus on: " + prompt,
+            im,
+        ],
         config=types.GenerateContentConfig(
             system_instruction=get_instructions(),
             temperature=0.5,
@@ -161,22 +168,22 @@ def gemini_spatial_understanding(image) -> dict:
     try:
         bounding_boxes = json.loads(string)
     except json.JSONDecodeError as e:
-        return {
-            "status": "error",
-            "message": f"""Failed to parse bounding boxes JSON: {e}.
+        return [
+            {
+                "status": "error",
+                "message": f"""Failed to parse bounding boxes JSON: {e}.
             Raw output: {string}""",
-        }
+            }
+        ]
 
     return bounding_boxes
 
 
-def analyze_screen():
-    """Take a screenshot of the display and store it to the local directory.
-    Important:
-        To view the screenshot, you must load the image.
+def take_screenshot() -> dict:
+    """Take a screenshot of the current state of the display.
 
     Returns:
-        dict: The outcome of the screenshot process, either "ok" or "error".
+        dict: The outcome of the screenshot process.
     """
     os.makedirs(os.path.dirname(config["SCREENSHOT_LOCATION"]), exist_ok=True)
     screenshot_path = config["SCREENSHOT_LOCATION"]
@@ -197,18 +204,7 @@ def analyze_screen():
             pil_cropped_img = img.crop(left_quarter_box)
             pil_cropped_img.save(screenshot_path)
 
-        bounding_boxes = gemini_spatial_understanding(screenshot_path)
-
-        plot_bounding_boxes(screenshot_path, bounding_boxes)
-
-        bounding_boxes = convert_coordinates(bounding_boxes, 1024, 1024)
-
-        print(bounding_boxes)
-
-        if bounding_boxes:
-            return {"status": "ok", "bounding_boxes": bounding_boxes}
-        else:
-            return {"status": "ok"}
+        return {"status": "ok"}
 
     except subprocess.CalledProcessError as e:
         return {"status": "error", "message": f"Error capturing screen: {str(e)}"}
@@ -227,38 +223,60 @@ def analyze_screen():
         }
 
 
-def convert_coordinates(
-    bounding_boxes: list[dict], width: int, height: int
-) -> list[dict]:
-    """Convert the bounding boxes to clickable coordinates."""
-    # Output the positions in [y1 x1 y2 x2] format.
-    print(width, height)
-    for bounding_box in bounding_boxes:
-        print(bounding_box)
-        x0 = bounding_box["box_2d"][1]
-        x1 = bounding_box["box_2d"][3]
-        x0_converted = int(x0 / width * config["MIRRORING_X_BOUND"])
-        x1_converted = int(x1 / width * config["MIRRORING_X_BOUND"])
-        x_center = int((x0_converted + x1_converted) / 2)
+def get_UI_bounding_boxes(elements: str) -> dict:
+    """Use an object detection model to locate multiple UI elements
+    in the latest screenshot and return their locations.
 
-        y0 = bounding_box["box_2d"][0]
-        y1 = bounding_box["box_2d"][2]
-        y0_inverted = height - y0
-        y1_inverted = height - y1
-        y0_converted = int(y0_inverted / height * config["MIRRORING_Y_BOUND"])
-        y1_converted = int(y1_inverted / height * config["MIRRORING_Y_BOUND"])
-        y_center = int((y0_converted + y1_converted) / 2)
+    Args:
+        elements: A detailed explanation of which kind of UI elements to locate.
+    """
+    bounding_boxes = gemini_spatial_understanding(
+        config["SCREENSHOT_LOCATION"], elements
+    )
+
+    if bounding_boxes[0].get("status", None) and (
+        bounding_boxes[0].get("status") == "warning"
+        or bounding_boxes[0].get("status") == "error"
+    ):
+        return bounding_boxes[0]
+
+    plot_bounding_boxes(config["SCREENSHOT_LOCATION"], bounding_boxes)
+
+    bounding_boxes = convert_coordinates(bounding_boxes)
+
+    return {"status": "ok", "bounding_boxes": bounding_boxes}
+
+
+def convert_coordinates(bounding_boxes: list[dict]) -> list[dict]:
+    """Convert the bounding boxes to clickable coordinates."""
+    height, width = config["CONVERSION_HEIGHT"], config["CONVERSION_WIDTH"]
+    x_bound, y_bound = config["MIRRORING_X_BOUND"], config["MIRRORING_Y_BOUND"]
+
+    for bounding_box in bounding_boxes:
+        x_center = int(
+            (
+                int(bounding_box["box_2d"][1] / width * x_bound)
+                + int(bounding_box["box_2d"][3] / width * x_bound)
+            )
+            / 2
+        )
+
+        y_center = int(
+            (
+                int((height - bounding_box["box_2d"][0]) / height * y_bound)
+                + int((height - bounding_box["box_2d"][2]) / height * y_bound)
+            )
+            / 2
+        )
 
         bounding_box["x"] = x_center
         bounding_box["y"] = y_center
-        print(bounding_box)
-        # Drop the box_2d key
         bounding_box.pop("box_2d")
 
     return bounding_boxes
 
 
-def load_screenshot(
+def _load_screenshot(
     callback_context: CallbackContext, llm_request: LlmRequest
 ) -> Optional[LlmResponse]:
     """Before model callback that automatically loads the screenshot."""
@@ -267,11 +285,9 @@ def load_screenshot(
             if (
                 llm_request.contents[-1].parts[0].function_response
                 and llm_request.contents[-1].parts[0].function_response.name
-                == "analyze_screen"
+                == "take_screenshot"
             ):
-                screenshot_path = config["SCREENSHOT_LOCATION"].replace(".png", "")
-                screenshot_path += "_analyzed.png"
-
+                screenshot_path = config["SCREENSHOT_LOCATION"]
                 if os.path.exists(screenshot_path):
                     screenshot_image = Image.open(screenshot_path)
 
@@ -279,21 +295,20 @@ def load_screenshot(
                         screenshot_image.save(output, format="PNG")
                         screenshot_bytes = output.getvalue()
 
-                    screenshot_content = types.Content(
-                        parts=[
-                            types.Part.from_bytes(
-                                data=screenshot_bytes, mime_type="image/png"
-                            )
-                        ],
-                        role="user",
+                    llm_request.contents.append(
+                        types.Content(
+                            parts=[
+                                types.Part.from_bytes(
+                                    data=screenshot_bytes, mime_type="image/png"
+                                )
+                            ],
+                            role="user",
+                        )
                     )
 
-                    llm_response = LlmResponse(
-                        content=screenshot_content,
-                    )
-                    return llm_response
-    pass
+    return None
 
 
 if __name__ == "__main__":
-    print(analyze_screen())
+    print(take_screenshot())
+    print(get_UI_bounding_boxes("Find the search bar"))

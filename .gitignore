@@ -15,5 +15,8 @@ wheels/
 # Screenshots
 phone_agent/data/
 
+# Tests
+tests/
+
 # Mac
 .DS_Store

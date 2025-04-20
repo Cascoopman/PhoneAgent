@@ -144,4 +144,4 @@ def enter_keys(keys: str) -> dict:
 
 
 if __name__ == "__main__":
-    print(move_pointer(191, 609))
+    print(move_pointer(259, 63))
