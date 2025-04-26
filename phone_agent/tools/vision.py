@@ -179,8 +179,11 @@ def gemini_spatial_understanding(image, prompt) -> list[dict]:
     return bounding_boxes
 
 
-def take_screenshot() -> dict:
-    """Take a screenshot of the current state of the display.
+def take_screenshot(explanation: str) -> dict:
+    """Take a screenshot of the current state of the iPhone display.
+
+    Args:
+        explanation (str): One sentence explanation as to why this tool is being used, and how it contributes to the goal.
 
     Returns:
         dict: The outcome of the screenshot process.
@@ -204,7 +207,7 @@ def take_screenshot() -> dict:
             pil_cropped_img = img.crop(left_quarter_box)
             pil_cropped_img.save(screenshot_path)
 
-        return {"status": "ok"}
+        return {"status": "screenshot captured"}
 
     except subprocess.CalledProcessError as e:
         return {"status": "error", "message": f"Error capturing screen: {str(e)}"}
@@ -223,15 +226,19 @@ def take_screenshot() -> dict:
         }
 
 
-def get_UI_bounding_boxes(elements: str) -> dict:
-    """Use an object detection model to locate multiple UI elements
-    in the latest screenshot and return their locations.
+def locate_UI_elements(explanation: str, elements: list[str]) -> dict:
+    """Use an object detection model to get the coordinates
+    of specific UI elements in the latest screenshot.
 
     Args:
-        elements: A detailed explanation of which kind of UI elements to locate.
+        explanation (str): One sentence explanation as to why this tool is being used, and how it contributes to the goal.
+        elements (list[str]): A list with detailed explanations of which specific UI elements to locate.
+
+    Returns:
+        dict: The outcome of the object location process.
     """
     bounding_boxes = gemini_spatial_understanding(
-        config["SCREENSHOT_LOCATION"], elements
+        config["SCREENSHOT_LOCATION"], ", ".join(elements)
     )
 
     if bounding_boxes[0].get("status", None) and (
@@ -244,7 +251,10 @@ def get_UI_bounding_boxes(elements: str) -> dict:
 
     bounding_boxes = convert_coordinates(bounding_boxes)
 
-    return {"status": "ok", "bounding_boxes": bounding_boxes}
+    return {
+        "status": "localization process completed",
+        "coordinates": bounding_boxes,
+    }
 
 
 def convert_coordinates(bounding_boxes: list[dict]) -> list[dict]:

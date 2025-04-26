@@ -15,12 +15,15 @@ config = {
 }
 
 
-def home_screen():
-    """Go back to the home screen of the device.
-    The home screen contains the app icons.
+def home_screen(explanation: str) -> dict:
+    """
+    Go back to the home screen of the iPhone.
+
+    Args:
+        explanation (str): One sentence explanation as to why this tool is being used, and how it contributes to the goal.
 
     Returns:
-        dict: The outcome of the home screen, either "ok" or "error".
+        dict: The outcome of clicking the home button.
     """
     x = config["HOME_BUTTON_X"]
     y = config["HOME_BUTTON_Y"]
@@ -30,18 +33,20 @@ def home_screen():
     time.sleep(0.1)  # Let the UI update
     pyautogui.click()
     time.sleep(0.1)
-    return {"status": "ok"}
+    return {"status": "home button clicked"}
 
 
-def move_pointer(x: int, y: int) -> dict:
-    """Move the pointer to the specified coordinates.
+def move_pointer(explanation: str, x: int, y: int) -> dict:
+    """
+    Move the pointer to the specified coordinates.
 
     Args:
+        explanation (str): One sentence explanation as to why this tool is being used, and how it contributes to the goal.
         x (int): The x coordinate to move to.
         y (int): The y coordinate to move to.
 
     Returns:
-        dict: The outcome of the move, either "ok" or "error".
+        dict: The outcome of the move pointer process.
     """
     if x > config["SCREEN_X_BOUND"] or x < 0:
         return {
@@ -62,29 +67,31 @@ def move_pointer(x: int, y: int) -> dict:
 
     pyautogui.moveTo(x, y)
     time.sleep(0.1)  # Let the UI update
-    return {"status": "ok"}
+    return {"status": "pointer moved"}
 
 
-def click_pointer() -> dict:
-    """Click on the screen at the current pointer position.
-    Important:
-        The pointer must be moved to the desired position first.
+def click_pointer(explanation: str) -> dict:
+    """
+    Click on the screen at the current pointer position.
+
+    Args:
+        explanation (str): One sentence explanation as to why this tool is being used, and how it contributes to the goal.
 
     Returns:
-        dict: The outcome of the click, either "ok" or "error".
+        dict: The outcome of the click process.
     """
     pyautogui.click()
     time.sleep(0.1)
     pyautogui.click()
     time.sleep(0.1)
-    return {"status": "ok"}
+    return {"status": "pointer clicked"}
 
 
 def _drag_screen(x_offset: int, y_offset: int) -> dict:
     y_offset = -y_offset
     pyautogui.drag(x_offset, y_offset, duration=0.15, button="left")
     time.sleep(0.1)
-    return {"status": "ok"}
+    return {"status": "scrolled screen"}
 
 
 def _scroll_left() -> dict:
@@ -103,16 +110,16 @@ def _scroll_down() -> dict:
     return _drag_screen(0, -100)
 
 
-def scroll_screen(direction: str) -> dict:
-    """Scroll across the screen in the specified direction.
-    Important: scrolling down will move the screen up and vice versa.
+def scroll_screen(explanation: str, direction: str) -> dict:
+    """
+    Scroll across the screen in the specified direction.
 
     Args:
-        direction (str): The direction to swipe.
-        The direction can be "left", "right", "up", or "down".
+        explanation (str): One sentence explanation as to why this tool is being used, and how it contributes to the goal.
+        direction (str): The direction to swipe. The direction must be "left", "right", "up", or "down".
 
     Returns:
-        dict: The outcome of the swipe, either "ok" or "error".
+        dict: The outcome of the swipe process.
     """
     if direction == "left":
         return _scroll_left()
@@ -124,15 +131,16 @@ def scroll_screen(direction: str) -> dict:
         return _scroll_down()
 
 
-def enter_keys(keys: str) -> dict:
+def enter_keys(explanation: str, keys: str) -> dict:
     """Enter keys in the current selected text field.
     Requires a text field to be selected first.
 
     Args:
+        explanation (str): One sentence explanation as to why this tool is being used, and how it contributes to the goal.
         keys (str): The keys to enter in the text field.
 
     Returns:
-        dict: The outcome of the key entry, either "ok" or "error".
+        dict: The outcome of the key entry process.
     """
     try:
         for key in keys:
@@ -140,8 +148,9 @@ def enter_keys(keys: str) -> dict:
             time.sleep(0.1)
     except Exception as e:
         return {"status": "error", "message": f"Error entering keys: {str(e)}"}
-    return {"status": "ok"}
+    return {"status": "keys entered"}
 
 
 if __name__ == "__main__":
-    print(move_pointer(259, 63))
+    print(move_pointer(explanation="", x=277, y=599))
+    print(click_pointer(explanation=""))

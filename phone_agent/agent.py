@@ -13,10 +13,10 @@ from phone_agent.tools.navigation import (
 )
 from phone_agent.tools.vision import (
     _load_screenshot,
-    get_UI_bounding_boxes,
+    locate_UI_elements,
     take_screenshot,
 )
-
+from phone_agent.tools.workflow import pause_workflow
 load_dotenv()
 
 # Load prompt from Jinja template
@@ -26,14 +26,14 @@ env = jinja2.Environment(
 )
 template = env.get_template("prompts/agent.j2")
 PROMPT_TEXT = (
-    template.render()
+    template.render(phone_password=os.getenv("PHONE_PASSWORD"))
 )  # https://cookbook.openai.com/examples/gpt4-1_prompting_guide
 
 root_agent = Agent(
-    name="phone_agent",
+    name="iphone_agent",
     model=os.getenv("GEMINI_FLASH_MODEL"),
-    description="Agent that controls the user's mobile device.",
-    instruction=PROMPT_TEXT,  # TODO: Remove implicit instructions.
+    description="Agent that controls the USER's iPhone and helps them complete their tasks.",
+    instruction=PROMPT_TEXT,
     tools=[
         home_screen,
         move_pointer,
@@ -41,7 +41,8 @@ root_agent = Agent(
         scroll_screen,
         enter_keys,
         take_screenshot,
-        get_UI_bounding_boxes,
+        locate_UI_elements,
+        pause_workflow,
     ],
     before_model_callback=_load_screenshot,
 )
