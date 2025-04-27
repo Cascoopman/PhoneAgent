@@ -2,7 +2,7 @@ import os
 
 import jinja2
 from dotenv import load_dotenv
-from google.adk.agents import Agent
+from google.adk.agents import Agent, LoopAgent
 
 from phone_agent.tools.navigation import (
     click_pointer,
@@ -16,7 +16,8 @@ from phone_agent.tools.vision import (
     locate_UI_elements,
     take_screenshot,
 )
-from phone_agent.tools.workflow import pause_workflow
+from phone_agent.tools.loop import pause_loop, human_intervention
+
 load_dotenv()
 
 # Load prompt from Jinja template
@@ -25,14 +26,13 @@ env = jinja2.Environment(
     autoescape=jinja2.select_autoescape(),
 )
 template = env.get_template("prompts/agent.j2")
-PROMPT_TEXT = (
-    template.render(phone_password=os.getenv("PHONE_PASSWORD"))
+PROMPT_TEXT = template.render(
+    phone_password=os.getenv("PHONE_PASSWORD")
 )  # https://cookbook.openai.com/examples/gpt4-1_prompting_guide
 
-root_agent = Agent(
+phone_agent = Agent(
     name="iphone_agent",
-    model=os.getenv("GEMINI_FLASH_MODEL"),
-    description="Agent that controls the USER's iPhone and helps them complete their tasks.",
+    model=os.getenv("GEMINI_PRO_MODEL"),
     instruction=PROMPT_TEXT,
     tools=[
         home_screen,
@@ -42,7 +42,13 @@ root_agent = Agent(
         enter_keys,
         take_screenshot,
         locate_UI_elements,
-        pause_workflow,
+        pause_loop,
+        human_intervention,
     ],
     before_model_callback=_load_screenshot,
+)
+
+root_agent = LoopAgent(
+    name="loop_agent",
+    sub_agents=[phone_agent],
 )

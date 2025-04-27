@@ -1,0 +1,512 @@
+[
+  {
+    "name": "cased99e35",
+    "data": [
+      {
+        "query": "Send a heart to my gf",
+        "expected_tool_use": [
+          {
+            "tool_name": "human_intervention",
+            "tool_input": {
+              "explanation": "I need the user to provide their girlfriend's name to know who to send the heart to."
+            }
+          }
+        ],
+        "expected_intermediate_agent_responses": [],
+        "reference": "Okay, I can help with that. First, I need to know who your girlfriend is in your contacts or messages. Could you please tell me her name?\n\nI will now request this information from you."
+      },
+      {
+        "query": "Her name is Emsie on messenger",
+        "expected_tool_use": [
+          {
+            "tool_name": "home_screen",
+            "tool_input": {
+              "explanation": "Navigating to the home screen to begin the process of opening Messenger."
+            }
+          },
+          {
+            "tool_name": "take_screenshot",
+            "tool_input": {
+              "explanation": "Taking a screenshot to locate the Messenger app on the home screen."
+            }
+          },
+          {
+            "tool_name": "locate_UI_elements",
+            "tool_input": {
+              "query": "the green speech bubble icon in the dock",
+              "explanation": "Locating the Messenger app icon in the dock to open it."
+            }
+          },
+          {
+            "tool_name": "move_pointer",
+            "tool_input": {
+              "explanation": "Moving the pointer to the Messenger app icon.",
+              "y": 47,
+              "x": 189
+            }
+          },
+          {
+            "tool_name": "click_pointer",
+            "tool_input": {
+              "explanation": "Clicking the Messenger app icon to open the application."
+            }
+          },
+          {
+            "tool_name": "take_screenshot",
+            "tool_input": {
+              "explanation": "Taking a screenshot to view the Messenger chat list and find the search bar or Emsie's conversation."
+            }
+          },
+          {
+            "tool_name": "human_intervention",
+            "tool_input": {
+              "explanation": "I opened the Messages app instead of Messenger as requested and need clarification from the user on which app and recipient to use."
+            }
+          }
+        ],
+        "expected_intermediate_agent_responses": [
+          {
+            "author": "iphone_agent",
+            "text": "Okay Luke, I can do that. I'll start by going to your home screen to find the Messenger app."
+          },
+          {
+            "author": "iphone_agent",
+            "text": "Okay, I'm on the home screen now. I need to see where the Messenger app is located.\n\nI will now take a screenshot."
+          },
+          {
+            "author": "iphone_agent",
+            "text": "Okay, I see the screenshot. The Messenger app (the green speech bubble icon) is in the dock at the bottom of the screen.\n\nI will now locate the Messenger app icon."
+          },
+          {
+            "author": "iphone_agent",
+            "text": "Okay, I have the coordinates for the Messenger app icon. Now I will move the pointer to it."
+          },
+          {
+            "author": "iphone_agent",
+            "text": "Okay, the pointer is on the Messenger app icon. Now I will click it to open the app."
+          },
+          {
+            "author": "iphone_agent",
+            "text": "Okay, Messenger is open. Now I need to find your conversation with Emsie.\n\nI'll take a screenshot to see the main chat list."
+          }
+        ],
+        "reference": "It looks like I mistakenly opened the Messages app instead of the Messenger app you mentioned earlier. I see a conversation with \"Emma Watson\" here in Messages.\n\nCould you please clarify:\n1.  Did you mean to send the heart via the Messages app or the Facebook Messenger app?\n2.  If you meant Messages, is \"Emma Watson\" the correct recipient (\"Emsie\")?\n3.  If you meant Facebook Messenger, should I go back to the home screen and open that app instead?\n\nI need your guidance to proceed correctly."
+      },
+      {
+        "query": "Facebook Messenger!",
+        "expected_tool_use": [
+          {
+            "tool_name": "home_screen",
+            "tool_input": {
+              "explanation": "Going back to the home screen to find the Facebook Messenger app."
+            }
+          },
+          {
+            "tool_name": "take_screenshot",
+            "tool_input": {
+              "explanation": "Taking a screenshot of the home screen to find the Facebook Messenger app."
+            }
+          },
+          {
+            "tool_name": "scroll_screen",
+            "tool_input": {
+              "direction": "right",
+              "explanation": "Scrolling right on the home screen to check for the Facebook Messenger app on the next page."
+            }
+          },
+          {
+            "tool_name": "take_screenshot",
+            "tool_input": {
+              "explanation": "Taking a screenshot of the second home screen page to locate the Facebook Messenger app."
+            }
+          },
+          {
+            "tool_name": "locate_UI_elements",
+            "tool_input": {
+              "query": "Messenger app icon",
+              "explanation": "Locating the Facebook Messenger app icon on the second home screen page."
+            }
+          },
+          {
+            "tool_name": "move_pointer",
+            "tool_input": {
+              "y": 419,
+              "x": 120,
+              "explanation": "Moving the pointer to the Facebook Messenger app icon."
+            }
+          },
+          {
+            "tool_name": "click_pointer",
+            "tool_input": {
+              "explanation": "Clicking the Facebook Messenger icon to open the application."
+            }
+          },
+          {
+            "tool_name": "take_screenshot",
+            "tool_input": {
+              "explanation": "Taking a screenshot of the Messenger app to find the search bar or the chat with Emsie."
+            }
+          },
+          {
+            "tool_name": "locate_UI_elements",
+            "tool_input": {
+              "query": "Smiley face icon next to the Aa text field",
+              "explanation": "Locating the smiley face icon next to the text input field to open the emoji menu."
+            }
+          },
+          {
+            "tool_name": "move_pointer",
+            "tool_input": {
+              "y": 53,
+              "explanation": "Moving the pointer to the smiley face icon to open the emoji menu.",
+              "x": 249
+            }
+          },
+          {
+            "tool_name": "click_pointer",
+            "tool_input": {
+              "explanation": "Clicking the smiley face icon to open the emoji menu."
+            }
+          },
+          {
+            "tool_name": "take_screenshot",
+            "tool_input": {
+              "explanation": "Taking a screenshot to view the emoji menu and find the heart emoji."
+            }
+          },
+          {
+            "tool_name": "locate_UI_elements",
+            "tool_input": {
+              "explanation": "Locating the text input field labeled 'Aa' to bring up the keyboard or emoji options.",
+              "query": "Aa text input field"
+            }
+          },
+          {
+            "tool_name": "move_pointer",
+            "tool_input": {
+              "y": 315,
+              "explanation": "Moving the pointer to the 'Aa' text input field.",
+              "x": 194
+            }
+          },
+          {
+            "tool_name": "click_pointer",
+            "tool_input": {
+              "explanation": "Clicking the 'Aa' text input field to activate it and potentially reveal the emoji keyboard option."
+            }
+          },
+          {
+            "tool_name": "take_screenshot",
+            "tool_input": {
+              "explanation": "Taking a screenshot to see if the keyboard or emoji button is visible after clicking the text input field."
+            }
+          },
+          {
+            "tool_name": "locate_UI_elements",
+            "tool_input": {
+              "explanation": "Locating the smiley face icon again to try accessing emojis through its menu.",
+              "query": "Smiley face icon next to the Aa text field"
+            }
+          },
+          {
+            "tool_name": "move_pointer",
+            "tool_input": {
+              "explanation": "Moving the pointer back to the smiley face icon.",
+              "y": 52,
+              "x": 249
+            }
+          },
+          {
+            "tool_name": "click_pointer",
+            "tool_input": {
+              "explanation": "Clicking the smiley face icon again to open the menu and look for an emoji tab."
+            }
+          },
+          {
+            "tool_name": "take_screenshot",
+            "tool_input": {
+              "explanation": "Taking a screenshot to view the menu opened by the smiley face icon and look for an emoji tab or button."
+            }
+          },
+          {
+            "tool_name": "locate_UI_elements",
+            "tool_input": {
+              "explanation": "Locating the standard emoji icon tab within the sticker/GIF menu.",
+              "query": "emoji icon tab in the row below the text input field"
+            }
+          },
+          {
+            "tool_name": "move_pointer",
+            "tool_input": {
+              "explanation": "Moving the pointer to the emoji tab.",
+              "y": 279,
+              "x": 122
+            }
+          },
+          {
+            "tool_name": "click_pointer",
+            "tool_input": {
+              "explanation": "Clicking the emoji tab icon to access the emoji keyboard."
+            }
+          },
+          {
+            "tool_name": "take_screenshot",
+            "tool_input": {
+              "explanation": "Taking a screenshot to verify the emoji keyboard is visible and find the heart emoji."
+            }
+          },
+          {
+            "tool_name": "locate_UI_elements",
+            "tool_input": {
+              "query": "Purple yin-yang icon in the bottom right",
+              "explanation": "Locating the purple yin-yang icon, which might be the Like/Reaction button."
+            }
+          },
+          {
+            "tool_name": "move_pointer",
+            "tool_input": {
+              "explanation": "Moving the pointer to the purple yin-yang icon.",
+              "x": 285,
+              "y": 314
+            }
+          },
+          {
+            "tool_name": "click_pointer",
+            "tool_input": {
+              "explanation": "Clicking the purple yin-yang icon to send a reaction or open the reaction menu."
+            }
+          },
+          {
+            "tool_name": "take_screenshot",
+            "tool_input": {
+              "explanation": "Taking a screenshot to see the result of clicking the purple reaction icon."
+            }
+          },
+          {
+            "tool_name": "locate_UI_elements",
+            "tool_input": {
+              "explanation": "Locating the 'Aa' text input field to type '<3'.",
+              "query": "Aa text input field"
+            }
+          },
+          {
+            "tool_name": "move_pointer",
+            "tool_input": {
+              "y": 315,
+              "x": 194,
+              "explanation": "Moving the pointer to the text input field."
+            }
+          },
+          {
+            "tool_name": "click_pointer",
+            "tool_input": {
+              "explanation": "Clicking the text input field to ensure it is focused before typing."
+            }
+          },
+          {
+            "tool_name": "enter_keys",
+            "tool_input": {
+              "explanation": "Typing '<3' into the text field, which should convert to a heart emoji.",
+              "text": "<3"
+            }
+          },
+          {
+            "tool_name": "take_screenshot",
+            "tool_input": {
+              "explanation": "Taking a screenshot to verify '<3' is in the text field and to locate the send button."
+            }
+          },
+          {
+            "tool_name": "locate_UI_elements",
+            "tool_input": {
+              "query": "Green send arrow icon",
+              "explanation": "Locating the green send arrow icon to send the message."
+            }
+          },
+          {
+            "tool_name": "move_pointer",
+            "tool_input": {
+              "x": 286,
+              "y": 52,
+              "explanation": "Moving the pointer to the green send arrow icon."
+            }
+          },
+          {
+            "tool_name": "click_pointer",
+            "tool_input": {
+              "explanation": "Clicking the green send arrow icon to send the '<3' message."
+            }
+          },
+          {
+            "tool_name": "take_screenshot",
+            "tool_input": {
+              "explanation": "Taking a final screenshot to verify the message was sent."
+            }
+          },
+          {
+            "tool_name": "human_intervention",
+            "tool_input": {
+              "explanation": "The heart emoji has been successfully sent to Emsie via Facebook Messenger. The task is complete."
+            }
+          }
+        ],
+        "expected_intermediate_agent_responses": [
+          {
+            "author": "iphone_agent",
+            "text": "Okay, my mistake! Let's go back to the home screen and find the correct Facebook Messenger app this time."
+          },
+          {
+            "author": "iphone_agent",
+            "text": "Okay, I'm back on the home screen. Now I need to find the Facebook Messenger app.\n\nI will take a screenshot to locate the Facebook Messenger app."
+          },
+          {
+            "author": "iphone_agent",
+            "text": "Okay, I've taken the screenshot of your home screen. I've looked through the apps shown (Camera, Clock, Files, Drive, Photos, itsme, Authenticator, Passwords, Trello, Gmail, Mail, Google Maps, De Lijn, Health, Basic-Fit, Bolero, Binance, STRIKE, KBC Mobile, Notion, YouTube Music, ChatGPT, Settings, Picnic, Phone, Calendar, Messages, Safari), but I don't see the Facebook Messenger app icon (usually a blue or purple speech bubble with a lightning bolt).\n\nIt might be on another page of your home screen. I'll swipe right to check the next page."
+          },
+          {
+            "author": "iphone_agent",
+            "text": "Okay, I've scrolled to the next page of your home screen. Now I need to check if the Facebook Messenger app is here.\n\nI will take a screenshot of this page."
+          },
+          {
+            "author": "iphone_agent",
+            "text": "Okay, I see the Facebook Messenger app on this page! It's the blue speech bubble icon with the lightning bolt, located below the Instagram icon.\n\nNow I will locate the Messenger app icon to get its coordinates."
+          },
+          {
+            "author": "iphone_agent",
+            "text": "Okay, I have the coordinates for the Facebook Messenger app icon.\n\nI will now move the pointer to the Messenger icon."
+          },
+          {
+            "author": "iphone_agent",
+            "text": "Okay, the pointer is on the Facebook Messenger icon. I will now click it to open the app."
+          },
+          {
+            "author": "iphone_agent",
+            "text": "Okay, I have opened the Facebook Messenger app. Now I need to find your conversation with \"Emsie\". Usually, there's a search bar at the top.\n\nI will take a screenshot to locate the search bar or the conversation list."
+          },
+          {
+            "author": "iphone_agent",
+            "text": "Okay, the screenshot shows you are already in the conversation with \"Emsie x\". Perfect!\n\nNow, I need to open the emoji menu to find the heart. I see a smiley face icon next to the text input field at the bottom right. I'll click that.\n\nFirst, I will locate the smiley face icon."
+          },
+          {
+            "author": "iphone_agent",
+            "text": "Okay, I have the coordinates for the smiley face icon (x=249, y=53).\n\nI will now move the pointer to the smiley face icon."
+          },
+          {
+            "author": "iphone_agent",
+            "text": "Okay, the pointer is on the smiley face icon. Now I will click it to open the emoji menu."
+          },
+          {
+            "author": "iphone_agent",
+            "text": "Okay, I've opened the emoji menu. Now I need to find the heart emoji.\n\nI'll take a screenshot to see the available emojis."
+          },
+          {
+            "author": "iphone_agent",
+            "text": "Okay, it seems clicking the smiley face opened the Stickers/GIFs menu, not the standard emoji keyboard. My apologies for that.\n\nLet's try clicking the text input field first (the one labeled \"Aa\"). This might bring up the keyboard or change the available options to include the emoji keyboard.\n\nFirst, I will locate the \"Aa\" text input field."
+          },
+          {
+            "author": "iphone_agent",
+            "text": "Okay, I have the coordinates for the \"Aa\" text input field (x=194, y=315).\n\nI will now move the pointer to the text input field."
+          },
+          {
+            "author": "iphone_agent",
+            "text": "Okay, the pointer is on the \"Aa\" text input field. Now I will click it."
+          },
+          {
+            "author": "iphone_agent",
+            "text": "Okay, I've clicked the text input field. Now I need to see if the keyboard or the emoji option appeared.\n\nI will take a screenshot to check the current state."
+          },
+          {
+            "author": "iphone_agent",
+            "text": "Okay, I've taken the screenshot after clicking the \"Aa\" text field. Looking at it, the standard keyboard didn't appear (as expected due to mirroring limitations), and there isn't a new button specifically for emojis. The bottom bar still shows the plus icon, camera, photos, microphone, the \"Aa\" field, the smiley face, and the purple yin-yang icon.\n\nIt seems clicking the text field didn't help access the emojis directly in this setup. Let's go back to the smiley face icon next to the \"Aa\" field. It's possible that the emoji keyboard is accessible *within* the menu that opens, perhaps through a tab or a different button.\n\nI will locate the smiley face icon again."
+          },
+          {
+            "author": "iphone_agent",
+            "text": "Okay, I have the coordinates for the smiley face icon again (x=249, y=52).\n\nI will move the pointer to the smiley face icon."
+          },
+          {
+            "author": "iphone_agent",
+            "text": "Okay, the pointer is on the smiley face icon. I will click it again to reopen that menu."
+          },
+          {
+            "author": "iphone_agent",
+            "text": "Okay, I've clicked the smiley face icon again. Now I need to see what menu appeared this time and if there's an option for standard emojis.\n\nI will take a screenshot."
+          },
+          {
+            "author": "iphone_agent",
+            "text": "Okay, I see the menu that opened after clicking the smiley face icon. It currently shows the GIF section. Right next to the highlighted GIF button, there are other icons. The one that looks like a standard smiley face should be the emoji keyboard.\n\nI will now locate that emoji icon tab."
+          },
+          {
+            "author": "iphone_agent",
+            "text": "Okay, I have the coordinates for the emoji icon tab (x=122, y=279).\n\nI will now move the pointer to the emoji tab."
+          },
+          {
+            "author": "iphone_agent",
+            "text": "Okay, the pointer is on the emoji tab icon. Now I will click it to switch to the emoji keyboard."
+          },
+          {
+            "author": "iphone_agent",
+            "text": "Okay, I've clicked the emoji tab. I should now be seeing the emoji keyboard.\n\nI will take a screenshot to confirm and locate the heart emoji."
+          },
+          {
+            "author": "iphone_agent",
+            "text": "Okay, looking at the screenshot, it seems clicking the emoji tab brought up an Avatar/Sticker creation section, not the standard emoji keyboard. My apologies, accessing emojis seems trickier than usual in this setup.\n\nLet's try interacting with the purple yin-yang icon located at the far right of the input bar. This is often the \"Like\" or quick reaction button, and sometimes clicking it sends a default reaction (which might be a heart), or holding it reveals other reactions.\n\nFirst, I will locate this purple icon."
+          },
+          {
+            "author": "iphone_agent",
+            "text": "Okay, I have the coordinates for the purple yin-yang icon (x=285, y=314).\n\nI will now move the pointer to this icon."
+          },
+          {
+            "author": "iphone_agent",
+            "text": "Okay, the pointer is on the purple yin-yang icon. Now I will click it. This might send a default reaction, possibly a thumbs-up, or maybe a heart depending on settings."
+          },
+          {
+            "author": "iphone_agent",
+            "text": "Okay, I clicked the purple icon. I need to see what happened \u2013 whether it sent a reaction or opened a menu.\n\nI will now take a screenshot to verify the result."
+          },
+          {
+            "author": "iphone_agent",
+            "text": "Okay, the screenshot shows that clicking the purple yin-yang icon sent that symbol as a message. That's not the heart you wanted to send. Apologies for the confusion, navigating emojis through mirroring can be tricky!\n\nLet's try typing a heart representation instead. The sequence `<3` is often automatically converted to a heart emoji in Messenger.\n\nFirst, I need to focus on the text input field again.\n\nI will locate the \"Aa\" text input field."
+          },
+          {
+            "author": "iphone_agent",
+            "text": "Okay, I have the coordinates for the \"Aa\" text input field (x=194, y=315).\n\nI will now move the pointer to the text input field."
+          },
+          {
+            "author": "iphone_agent",
+            "text": "Okay, the pointer is on the \"Aa\" text input field. I will click it to make sure it's selected for text entry."
+          },
+          {
+            "author": "iphone_agent",
+            "text": "Okay, the text field should now be focused.\n\nI will now type the sequence `<3`."
+          },
+          {
+            "author": "iphone_agent",
+            "text": "Okay, I have entered `<3` into the text field. Now I need to send the message. The send button is usually represented by an arrow icon next to the text field after typing something.\n\nI will take a screenshot to confirm the text is entered and locate the send button."
+          },
+          {
+            "author": "iphone_agent",
+            "text": "Okay, the screenshot confirms that `<3` is in the text field. I also see the green send arrow icon to the right of the text field.\n\nI will now locate the send button."
+          },
+          {
+            "author": "iphone_agent",
+            "text": "Okay, I have the coordinates for the green send arrow icon (x=286, y=52).\n\nI will now move the pointer to the send button."
+          },
+          {
+            "author": "iphone_agent",
+            "text": "Okay, the pointer is on the green send arrow icon. Now I will click it to send the message."
+          },
+          {
+            "author": "iphone_agent",
+            "text": "Okay, I have clicked the send button. The message `<3` should now be sent to Emsie, and hopefully, it appeared as a heart emoji in the chat.\n\nTo confirm, I will take one last screenshot."
+          }
+        ],
+        "reference": "Okay Luke, the final screenshot confirms that the `<3` message was sent and it appeared as a large red heart emoji in your chat with Emsie! It's marked as \"Delivered\".\n\nIs there anything else I can help you with?"
+      }
+    ],
+    "initial_session": {
+      "state": {},
+      "app_name": "phone_agent",
+      "user_id": "user"
+    }
+  }
+]

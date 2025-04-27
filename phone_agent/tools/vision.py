@@ -136,7 +136,7 @@ def get_instructions() -> str:
     return template.render()
 
 
-def gemini_spatial_understanding(image, prompt) -> list[dict]:
+def gemini_spatial_understanding(image, query) -> list[dict]:
     """github/google-gemini/cookbook/Spatial_understanding.ipynb"""
     safety_settings = [
         types.SafetySetting(
@@ -147,13 +147,16 @@ def gemini_spatial_understanding(image, prompt) -> list[dict]:
 
     # Load and resize image
     im = Image.open(BytesIO(open(image, "rb").read()))
-    im.thumbnail([1024, 1024], Image.Resampling.LANCZOS)
+    im.thumbnail(
+        [config["CONVERSION_WIDTH"], config["CONVERSION_HEIGHT"]],
+        Image.Resampling.LANCZOS,
+    )
 
     # Run model to find bounding boxes
     response = client.models.generate_content(
         model=config["GEMINI_PRO_MODEL"],
         contents=[
-            "Here is what you should focus on: " + prompt,
+            "Here is what you should focus on: " + query,
             im,
         ],
         config=types.GenerateContentConfig(
@@ -176,11 +179,24 @@ def gemini_spatial_understanding(image, prompt) -> list[dict]:
             }
         ]
 
+    try:
+        bounding_boxes[0]["box_2d"]
+    except KeyError:
+        return [
+            {
+                "status": "error",
+                "message": f"No bounding boxes found. Raw response: {string}",
+            }
+        ]
+
     return bounding_boxes
 
 
 def take_screenshot(explanation: str) -> dict:
-    """Take a screenshot of the current state of the iPhone display.
+    """
+    Captures a screenshot of the current iPhone screen and returns it as image
+    data. This is crucial for verifying the current UI state before planning
+    actions.
 
     Args:
         explanation (str): One sentence explanation as to why this tool is being used, and how it contributes to the goal.
@@ -226,20 +242,22 @@ def take_screenshot(explanation: str) -> dict:
         }
 
 
-def locate_UI_elements(explanation: str, elements: list[str]) -> dict:
-    """Use an object detection model to get the coordinates
-    of specific UI elements in the latest screenshot.
+def locate_UI_elements(explanation: str, query: str) -> dict:
+    """
+    Analyzes the latest screenshot to locate specific UI elements described by
+    the query. Returns a list of found elements, including their center coordinates
+    (x, y). Essential *before* using `move_pointer`. Be specific in your query.
 
     Args:
         explanation (str): One sentence explanation as to why this tool is being used, and how it contributes to the goal.
-        elements (list[str]): A list with detailed explanations of which specific UI elements to locate.
+        query (str): A natural language description of the UI element(s) to
+          locate (e.g., 'the settings icon', 'the text field labeled username',
+          'button containing Send').
 
     Returns:
         dict: The outcome of the object location process.
     """
-    bounding_boxes = gemini_spatial_understanding(
-        config["SCREENSHOT_LOCATION"], ", ".join(elements)
-    )
+    bounding_boxes = gemini_spatial_understanding(config["SCREENSHOT_LOCATION"], query)
 
     if bounding_boxes[0].get("status", None) and (
         bounding_boxes[0].get("status") == "warning"
@@ -259,7 +277,7 @@ def locate_UI_elements(explanation: str, elements: list[str]) -> dict:
 
 def convert_coordinates(bounding_boxes: list[dict]) -> list[dict]:
     """Convert the bounding boxes to clickable coordinates."""
-    height, width = config["CONVERSION_HEIGHT"], config["CONVERSION_WIDTH"]
+    height, width = 1000, 1000  # Gemini returns coordinates in 1000x1000 pixels
     x_bound, y_bound = config["MIRRORING_X_BOUND"], config["MIRRORING_Y_BOUND"]
 
     for bounding_box in bounding_boxes:
@@ -316,9 +334,27 @@ def _load_screenshot(
                         )
                     )
 
+    # -- solves google.genai.errors.ClientError: 400 INVALID_ARGUMENT --
+    if llm_request.contents and llm_request.contents[-1].role == "model":
+        if llm_request.contents[-1].parts:
+            if llm_request.contents[-1].parts[0].text:
+                if llm_request.contents[-1].parts[0].text == "":
+                    llm_request.contents[-1].parts[0].text = " "
+    if (  # looping agent adds a 'user' part at [-1] so we need to check [-2]
+        llm_request.contents
+        and len(llm_request.contents) > 1
+        and llm_request.contents[-2].role == "model"
+    ):
+        if llm_request.contents[-2].parts:
+            if llm_request.contents[-2].parts[0].text:
+                if llm_request.contents[-2].parts[0].text == "":
+                    llm_request.contents[-2].parts[0].text = " "
+
     return None
 
 
 if __name__ == "__main__":
-    print(take_screenshot())
-    print(get_UI_bounding_boxes("Find the search bar"))
+    input = [{"box_2d": [898, 486, 943, 843], "label": "text input field"}]
+    print(convert_coordinates(input))
+
+    # outputs 402, 67

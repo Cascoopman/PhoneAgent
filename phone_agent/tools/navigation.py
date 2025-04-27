@@ -17,7 +17,9 @@ config = {
 
 def home_screen(explanation: str) -> dict:
     """
-    Go back to the home screen of the iPhone.
+    Navigates the iPhone back to the home screen. Equivalent to the primary home
+    gesture (swipe up from bottom or home button press). Use this to establish a
+    known starting state.
 
     Args:
         explanation (str): One sentence explanation as to why this tool is being used, and how it contributes to the goal.
@@ -38,12 +40,16 @@ def home_screen(explanation: str) -> dict:
 
 def move_pointer(explanation: str, x: int, y: int) -> dict:
     """
-    Move the pointer to the specified coordinates.
+    Moves the touch pointer to a specific coordinate (x, y) on the screen.
+    Coordinates must be obtained first using the `locate_UI_elements` tool.
+    After locating the element, use this tool to move the pointer to the element.
+    Do not guess coordinates.
+    Always verify the result using the `take_screenshot` tool.
 
     Args:
         explanation (str): One sentence explanation as to why this tool is being used, and how it contributes to the goal.
-        x (int): The x coordinate to move to.
-        y (int): The y coordinate to move to.
+        x (int): The target x-coordinate for the pointer.
+        y (int): The target y-coordinate for the pointer.
 
     Returns:
         dict: The outcome of the move pointer process.
@@ -72,7 +78,10 @@ def move_pointer(explanation: str, x: int, y: int) -> dict:
 
 def click_pointer(explanation: str) -> dict:
     """
-    Click on the screen at the current pointer position.
+    Performs a click action at the current touch pointer location. Ensure the
+    pointer is correctly positioned using `move_pointer` before calling this.
+    This tool does not accept any coordinates as input.
+    Always verify the result using the `take_screenshot` tool.
 
     Args:
         explanation (str): One sentence explanation as to why this tool is being used, and how it contributes to the goal.
@@ -87,32 +96,54 @@ def click_pointer(explanation: str) -> dict:
     return {"status": "pointer clicked"}
 
 
-def _drag_screen(x_offset: int, y_offset: int) -> dict:
-    y_offset = -y_offset
-    pyautogui.drag(x_offset, y_offset, duration=0.15, button="left")
+def _center_mouse() -> dict:
+    x_center, y_center = config["SCREEN_X_BOUND"] / 2, config["SCREEN_Y_BOUND"] / 2
+    move_pointer(explanation="", x=x_center, y=y_center)
+    time.sleep(0.1)
+    return {"status": "mouse centered"}
+
+
+def _hscroll_screen(direction: int) -> dict:
+    _center_mouse()
+
+    clicks = 5000 if direction == 1 else -5000
+    pyautogui.hscroll(clicks=clicks)
+    pyautogui.hscroll(clicks=clicks)
+    time.sleep(0.1)
+    return {"status": "scrolled screen"}
+
+
+def _vscroll_screen(direction: int) -> dict:
+    _center_mouse()
+
+    clicks = 5000 if direction == 1 else -5000
+    pyautogui.vscroll(clicks=clicks)
+    pyautogui.vscroll(clicks=clicks)
     time.sleep(0.1)
     return {"status": "scrolled screen"}
 
 
 def _scroll_left() -> dict:
-    return _drag_screen(100, 0)
+    return _hscroll_screen(1)
 
 
 def _scroll_right() -> dict:
-    return _drag_screen(-100, 0)
+    return _hscroll_screen(-1)
 
 
 def _scroll_up() -> dict:
-    return _drag_screen(0, 100)
+    return _vscroll_screen(1)
 
 
 def _scroll_down() -> dict:
-    return _drag_screen(0, -100)
+    return _vscroll_screen(-1)
 
 
 def scroll_screen(explanation: str, direction: str) -> dict:
     """
-    Scroll across the screen in the specified direction.
+    Scrolls the screen content in a specified direction (up, down, left, right).
+    Use this to reveal elements that are currently off-screen.
+    Always verify the result using the `take_screenshot` tool.
 
     Args:
         explanation (str): One sentence explanation as to why this tool is being used, and how it contributes to the goal.
@@ -121,6 +152,7 @@ def scroll_screen(explanation: str, direction: str) -> dict:
     Returns:
         dict: The outcome of the swipe process.
     """
+    direction = direction.lower().strip()
     if direction == "left":
         return _scroll_left()
     elif direction == "right":
@@ -129,21 +161,28 @@ def scroll_screen(explanation: str, direction: str) -> dict:
         return _scroll_up()
     elif direction == "down":
         return _scroll_down()
+    else:
+        return {"status": "error", "message": "Invalid direction"}
 
 
-def enter_keys(explanation: str, keys: str) -> dict:
-    """Enter keys in the current selected text field.
-    Requires a text field to be selected first.
+def enter_keys(explanation: str, text: str) -> dict:
+    """
+    Enters the specified text into the currently focused text input field.
+    This tool is only able to enter default characters found on a physical QWERTY keyboard.
+    It does not support special characters or emojis.
+    Ensure a text field is selected before calling this. For sensitive
+    information like passwords, confirm with the USER first if not explicitly
+    permitted.
 
     Args:
         explanation (str): One sentence explanation as to why this tool is being used, and how it contributes to the goal.
-        keys (str): The keys to enter in the text field.
+        text (str): The text sequence to enter.
 
     Returns:
         dict: The outcome of the key entry process.
     """
     try:
-        for key in keys:
+        for key in text:
             pyautogui.press(key)
             time.sleep(0.1)
     except Exception as e:
@@ -152,5 +191,5 @@ def enter_keys(explanation: str, keys: str) -> dict:
 
 
 if __name__ == "__main__":
-    print(move_pointer(explanation="", x=277, y=599))
-    print(click_pointer(explanation=""))
+    print(move_pointer(explanation="", x=150, y=330))
+    print(scroll_screen(explanation="", direction="up"))

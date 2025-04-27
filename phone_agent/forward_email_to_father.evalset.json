@@ -1,0 +1,720 @@
+[
+  {
+    "name": "case98d153",
+    "data": [
+      {
+        "query": "Hi I recently got the Smartcash annual report in my mail. Can you forward it to my dad?",
+        "expected_tool_use": [
+          {
+            "tool_name": "home_screen",
+            "tool_input": {
+              "explanation": "Navigating to the home screen to begin the process of finding the Mail app."
+            }
+          },
+          {
+            "tool_name": "take_screenshot",
+            "tool_input": {
+              "explanation": "Taking a screenshot to locate the Mail app on the home screen."
+            }
+          },
+          {
+            "tool_name": "locate_UI_elements",
+            "tool_input": {
+              "query": "Mail app icon",
+              "explanation": "Locating the Mail app icon on the home screen."
+            }
+          },
+          {
+            "tool_name": "move_pointer",
+            "tool_input": {
+              "x": 192,
+              "y": 420,
+              "explanation": "Moving the pointer to the Mail app icon."
+            }
+          },
+          {
+            "tool_name": "click_pointer",
+            "tool_input": {
+              "explanation": "Clicking the Mail app icon to open the application."
+            }
+          },
+          {
+            "tool_name": "take_screenshot",
+            "tool_input": {
+              "explanation": "Taking a screenshot to find the search bar in the Mail app."
+            }
+          },
+          {
+            "tool_name": "locate_UI_elements",
+            "tool_input": {
+              "query": "Back arrow button",
+              "explanation": "Locating the back arrow button to navigate back to the mailbox view."
+            }
+          },
+          {
+            "tool_name": "move_pointer",
+            "tool_input": {
+              "explanation": "Moving the pointer to the back arrow button.",
+              "y": 596,
+              "x": 18
+            }
+          },
+          {
+            "tool_name": "click_pointer",
+            "tool_input": {
+              "explanation": "Clicking the back arrow button to return to the mailbox view."
+            }
+          },
+          {
+            "tool_name": "take_screenshot",
+            "tool_input": {
+              "explanation": "Taking a screenshot to locate the search bar in the Mail app."
+            }
+          },
+          {
+            "tool_name": "locate_UI_elements",
+            "tool_input": {
+              "explanation": "Locating the search bar to find the specific email.",
+              "query": "Search bar"
+            }
+          },
+          {
+            "tool_name": "move_pointer",
+            "tool_input": {
+              "y": 523,
+              "explanation": "Moving the pointer to the search bar.",
+              "x": 158
+            }
+          },
+          {
+            "tool_name": "click_pointer",
+            "tool_input": {
+              "explanation": "Clicking the search bar to activate it."
+            }
+          },
+          {
+            "tool_name": "enter_keys",
+            "tool_input": {
+              "text": "Smartcash annual report",
+              "explanation": "Entering 'Smartcash annual report' into the search bar."
+            }
+          },
+          {
+            "tool_name": "take_screenshot",
+            "tool_input": {
+              "explanation": "Taking a screenshot to view the search results for 'Smartcash annual report'."
+            }
+          },
+          {
+            "tool_name": "locate_UI_elements",
+            "tool_input": {
+              "explanation": "Locating the 'Subject contains: Smartcash annua...' search suggestion.",
+              "query": "Subject contains: Smartcash annua..."
+            }
+          },
+          {
+            "tool_name": "move_pointer",
+            "tool_input": {
+              "explanation": "Moving the pointer to the 'Subject contains: Smartcash annua...' suggestion.",
+              "y": 442,
+              "x": 154
+            }
+          },
+          {
+            "tool_name": "click_pointer",
+            "tool_input": {
+              "explanation": "Clicking the 'Subject contains: Smartcash annua...' suggestion to filter emails."
+            }
+          },
+          {
+            "tool_name": "take_screenshot",
+            "tool_input": {
+              "explanation": "Taking a screenshot to see the emails found with the subject 'Smartcash annual report'."
+            }
+          },
+          {
+            "tool_name": "locate_UI_elements",
+            "tool_input": {
+              "query": "Cancel button",
+              "explanation": "Locating the 'Cancel' button to clear the current search filter."
+            }
+          },
+          {
+            "tool_name": "move_pointer",
+            "tool_input": {
+              "y": 591,
+              "x": 270,
+              "explanation": "Moving the pointer to the 'Cancel' button."
+            }
+          },
+          {
+            "tool_name": "click_pointer",
+            "tool_input": {
+              "explanation": "Clicking the Cancel button to clear the search filter."
+            }
+          },
+          {
+            "tool_name": "take_screenshot",
+            "tool_input": {
+              "explanation": "Taking a screenshot to check the state of the search interface after cancelling the previous search."
+            }
+          },
+          {
+            "tool_name": "locate_UI_elements",
+            "tool_input": {
+              "explanation": "Locating the search bar to initiate a new search.",
+              "query": "Search bar"
+            }
+          },
+          {
+            "tool_name": "move_pointer",
+            "tool_input": {
+              "explanation": "Moving the pointer to the search bar.",
+              "y": 517,
+              "x": 154
+            }
+          },
+          {
+            "tool_name": "click_pointer",
+            "tool_input": {
+              "explanation": "Clicking the search bar to activate it for the new search."
+            }
+          },
+          {
+            "tool_name": "enter_keys",
+            "tool_input": {
+              "explanation": "Entering 'Smartcash' into the search bar.",
+              "text": "Smartcash"
+            }
+          },
+          {
+            "tool_name": "take_screenshot",
+            "tool_input": {
+              "explanation": "Taking a screenshot to view the search results for 'Smartcash'."
+            }
+          },
+          {
+            "tool_name": "locate_UI_elements",
+            "tool_input": {
+              "explanation": "Locating the 'Attachment name contains: Sma...' suggestion to filter emails.",
+              "query": "Attachment name contains: Sma..."
+            }
+          },
+          {
+            "tool_name": "move_pointer",
+            "tool_input": {
+              "x": 174,
+              "explanation": "Moving the pointer to the 'Attachment name contains: Sma...' suggestion.",
+              "y": 104
+            }
+          },
+          {
+            "tool_name": "click_pointer",
+            "tool_input": {
+              "explanation": "Clicking the 'Attachment name contains: Sma...' suggestion to filter emails by attachment name."
+            }
+          },
+          {
+            "tool_name": "take_screenshot",
+            "tool_input": {
+              "explanation": "Taking a screenshot to see the emails filtered by attachment name starting with 'Sma'."
+            }
+          },
+          {
+            "tool_name": "locate_UI_elements",
+            "tool_input": {
+              "query": "Email from Emiel & Paul",
+              "explanation": "Locating the email from 'Emiel & Paul' in the search results."
+            }
+          },
+          {
+            "tool_name": "move_pointer",
+            "tool_input": {
+              "x": 163,
+              "y": 494,
+              "explanation": "Moving the pointer to the email from 'Emiel & Paul'."
+            }
+          },
+          {
+            "tool_name": "click_pointer",
+            "tool_input": {
+              "explanation": "Clicking the email from 'Emiel & Paul' to open it."
+            }
+          },
+          {
+            "tool_name": "take_screenshot",
+            "tool_input": {
+              "explanation": "Taking a screenshot to examine the content of the opened email."
+            }
+          },
+          {
+            "tool_name": "scroll_screen",
+            "tool_input": {
+              "direction": "down",
+              "explanation": "Scrolling down the email to check for the attachment or more details about the annual report."
+            }
+          },
+          {
+            "tool_name": "take_screenshot",
+            "tool_input": {
+              "explanation": "Taking a screenshot after scrolling down the email to view the attachment details."
+            }
+          },
+          {
+            "tool_name": "locate_UI_elements",
+            "tool_input": {
+              "query": "Compose/forward button",
+              "explanation": "Locating the compose/forward button, which looks like a square with a pen, to initiate forwarding the email."
+            }
+          },
+          {
+            "tool_name": "move_pointer",
+            "tool_input": {
+              "explanation": "Moving the pointer to the Reply/Forward button (curved arrow) to access forwarding options.",
+              "x": 200,
+              "y": 52
+            }
+          },
+          {
+            "tool_name": "click_pointer",
+            "tool_input": {
+              "explanation": "Clicking the Reply/Forward button to access the reply and forward options."
+            }
+          },
+          {
+            "tool_name": "take_screenshot",
+            "tool_input": {
+              "explanation": "Taking a screenshot to view the menu options after clicking the Reply/Forward button."
+            }
+          },
+          {
+            "tool_name": "locate_UI_elements",
+            "tool_input": {
+              "explanation": "Locating the 'Forward' button in the menu.",
+              "query": "Forward button"
+            }
+          },
+          {
+            "tool_name": "move_pointer",
+            "tool_input": {
+              "x": 188,
+              "y": 245,
+              "explanation": "Moving the pointer to the 'Forward' button."
+            }
+          },
+          {
+            "tool_name": "click_pointer",
+            "tool_input": {
+              "explanation": "Clicking the 'Forward' button to initiate forwarding the email."
+            }
+          },
+          {
+            "tool_name": "human_intervention",
+            "tool_input": {
+              "explanation": "I need the user to provide their dad's email address to complete the forwarding process."
+            }
+          }
+        ],
+        "expected_intermediate_agent_responses": [
+          {
+            "author": "iphone_agent",
+            "text": "Okay, I can help you with that. First, I need to find the email in your Mail app.\n\nI'll start by going to your home screen to get to a known state.\n"
+          },
+          {
+            "author": "iphone_agent",
+            "text": "Okay, I'm on the home screen now. I need to find the Mail app. I'll take a screenshot to see where it is.\n"
+          },
+          {
+            "author": "iphone_agent",
+            "text": "Okay, I see the Mail app icon on your home screen. I'll locate it now.\n"
+          },
+          {
+            "author": "iphone_agent",
+            "text": "Okay, I've found the Mail app icon. Now I'll move the pointer to it.\n"
+          },
+          {
+            "author": "iphone_agent",
+            "text": "Okay, the pointer is on the Mail app icon. Now I will click it to open the app.\n"
+          },
+          {
+            "author": "iphone_agent",
+            "text": "Okay, I've opened the Mail app. Now I need to find the email with the \"Smartcash annual report\". I'll start by looking for a search bar.\n\nI'll take a screenshot to see the current screen layout.\n"
+          },
+          {
+            "author": "iphone_agent",
+            "text": "Okay, it seems I'm currently viewing an email from \"De Lijn\". I need to go back to the main mailbox view to search for the correct email. I see a back arrow in the top left corner.\n\nFirst, I'll locate the back arrow button.\n"
+          },
+          {
+            "author": "iphone_agent",
+            "text": "Okay, I have located the back arrow button. Now I'll move the pointer to it.\n"
+          },
+          {
+            "author": "iphone_agent",
+            "text": "Okay, the pointer is on the back arrow button. I will now click it to go back to the previous screen.\n"
+          },
+          {
+            "author": "iphone_agent",
+            "text": "Okay, I'm back in what looks like the main mailbox view. Now I need to find the search bar to locate the email.\n\nI'll take a screenshot to see the current screen layout.\n"
+          },
+          {
+            "author": "iphone_agent",
+            "text": "Okay, I see the \"All Inboxes\" screen. I can see a search bar labeled \"Search\".\n\nFirst, I'll locate the search bar.\n"
+          },
+          {
+            "author": "iphone_agent",
+            "text": "Okay, I've located the search bar. Now I'll move the pointer to it.\n"
+          },
+          {
+            "author": "iphone_agent",
+            "text": "Okay, the pointer is on the search bar. Now I'll click it to activate the search field.\n"
+          },
+          {
+            "author": "iphone_agent",
+            "text": "Okay, the search bar is active. Now I'll enter \"Smartcash annual report\" into the search field.\n"
+          },
+          {
+            "author": "iphone_agent",
+            "text": "Okay, I've entered the search query. Now I need to see the search results and select the correct email.\n\nI'll take a screenshot to view the search results.\n"
+          },
+          {
+            "author": "iphone_agent",
+            "text": "Okay, the search has yielded some suggestions. The most relevant one seems to be \"Subject contains: Smartcash annua...\". I'll select that to see the emails matching this subject.\n\nFirst, I need to locate the \"Subject contains: Smartcash annua...\" suggestion.\n"
+          },
+          {
+            "author": "iphone_agent",
+            "text": "Okay, I have located the \"Subject contains: Smartcash annua...\" suggestion. Now I will move the pointer to it.\n"
+          },
+          {
+            "author": "iphone_agent",
+            "text": "Okay, the pointer is on the \"Subject contains: Smartcash annua...\" suggestion. Now I'll click it to filter the search results.\n"
+          },
+          {
+            "author": "iphone_agent",
+            "text": "Okay, I've filtered the emails based on the subject. Now I need to see the results and open the correct email.\n\nI'll take a screenshot to view the emails found.\n"
+          },
+          {
+            "author": "iphone_agent",
+            "text": "Okay, it looks like the search didn't find any emails matching the subject \"Smartcash annual report\" right now. It also mentions that some results might not appear unless the iPhone is locked, charging, and connected to Wi-Fi, which might be why we're not seeing it.\n\nLet's try broadening the search. I'll cancel the current search filter and try searching again.\n\nFirst, I'll locate the \"Cancel\" button in the top right corner.\n"
+          },
+          {
+            "author": "iphone_agent",
+            "text": "Okay, I have located the \"Cancel\" button. Now I will move the pointer to it.\n"
+          },
+          {
+            "author": "iphone_agent",
+            "text": "Okay, the pointer is on the \"Cancel\" button. Now I'll click it to clear the search.\n"
+          },
+          {
+            "author": "iphone_agent",
+            "text": "Okay, I've cancelled the previous search. Let's try searching again with just \"Smartcash\" to see if that helps find the email.\n\nFirst, I need to make sure the search bar is ready. I'll take a screenshot.\n"
+          },
+          {
+            "author": "iphone_agent",
+            "text": "Okay, the screenshot confirms I am back in the \"All Inboxes\" view. The search bar is ready.\n\nFirst, I'll locate the search bar again.\n"
+          },
+          {
+            "author": "iphone_agent",
+            "text": "Okay, I've located the search bar again. Now I'll move the pointer to it.\n"
+          },
+          {
+            "author": "iphone_agent",
+            "text": "Okay, the pointer is on the search bar. I'll click it to activate the field.\n"
+          },
+          {
+            "author": "iphone_agent",
+            "text": "Okay, the search bar is active. Now I'll enter \"Smartcash\" into the search field.\n"
+          },
+          {
+            "author": "iphone_agent",
+            "text": "Okay, I've entered \"Smartcash\" into the search bar. Now I need to see the results.\n\nI'll take a screenshot to view the search results.\n"
+          },
+          {
+            "author": "iphone_agent",
+            "text": "Okay, searching for \"Smartcash\" yielded some results and suggestions. I don't see an email clearly labeled \"Smartcash annual report\" in the \"Top Hits\".\n\nHowever, there's a suggestion \"Attachment name contains: Sma...\". Since annual reports are often sent as attachments, let's try filtering by that.\n\nFirst, I'll locate the \"Attachment name contains: Sma...\" suggestion.\n"
+          },
+          {
+            "author": "iphone_agent",
+            "text": "Okay, I have located the \"Attachment name contains: Sma...\" suggestion. Now I will move the pointer to it.\n"
+          },
+          {
+            "author": "iphone_agent",
+            "text": "Okay, the pointer is on the \"Attachment name contains: Sma...\" suggestion. Now I'll click it to filter the emails based on attachment names starting with \"Sma\".\n"
+          },
+          {
+            "author": "iphone_agent",
+            "text": "Okay, I've filtered the emails by attachment name starting with \"Sma\". Now I need to see the results and find the correct email.\n\nI'll take a screenshot to view the filtered emails.\n"
+          },
+          {
+            "author": "iphone_agent",
+            "text": "Okay, I see the search results filtered by attachment name starting with \"Sma\". There's one email listed from \"Emiel & Paul\" with the subject \"Smartcash shareholder event Ap...\". It has an attachment icon, which is promising, but the subject isn't exactly \"annual report\".\n\nLet's open this email to check if it's the one you're looking for.\n\nFirst, I'll locate the email from \"Emiel & Paul\".\n"
+          },
+          {
+            "author": "iphone_agent",
+            "text": "Okay, I have located the email from \"Emiel & Paul\". Now I will move the pointer to it.\n"
+          },
+          {
+            "author": "iphone_agent",
+            "text": "Okay, the pointer is on the email from \"Emiel & Paul\". Now I'll click it to open the email and see if it's the correct one.\n"
+          },
+          {
+            "author": "iphone_agent",
+            "text": "Okay, I've opened the email from \"Emiel & Paul\". Let me check its contents to see if it's the correct \"Smartcash annual report\" email.\n\nI'll take a screenshot of the email.\n"
+          },
+          {
+            "author": "iphone_agent",
+            "text": "Okay, I've examined the email content from the screenshot. The subject is \"Fwd: Smartcash shareholder event April 22, 2025 | SFC3\" and it mentions \"Annual\" in the body. There's also a paperclip icon indicating an attachment, which could be the report.\n\nTo be sure, I'll scroll down to see the rest of the email content and look for the attachment details.\n"
+          },
+          {
+            "author": "iphone_agent",
+            "text": "Okay, I've scrolled down. Now I'll take another screenshot to see the rest of the email content and the attachment details.\n"
+          },
+          {
+            "author": "iphone_agent",
+            "text": "Okay, I've examined the second screenshot after scrolling. It shows the end of the email body and the action bar at the bottom (delete, folder, reply, compose/forward). It doesn't explicitly list the attachment file name, but we know there is an attachment from the paperclip icon seen earlier.\n\nAssuming this is the correct email containing the report (as it mentions the \"Annual Investors Meeting\"), I'll proceed to forward it. I need to find the forward action. Usually, this is combined with the reply button or might be under a separate menu. The rightmost icon (a square with a pen) often represents composing a new message or sometimes forwarding/replying options. The curved left arrow usually means reply. Let's try the rightmost icon first, as it often contains the forward option.\n\nFirst, I'll locate the compose/forward button (rightmost icon).\n"
+          },
+          {
+            "author": "iphone_agent",
+            "text": "Okay, the localizer identified the reply button (curved arrow) as \"Reply/Forward button\". This button usually contains the forward option. I'll move the pointer to it.\n\n"
+          },
+          {
+            "author": "iphone_agent",
+            "text": "Okay, the pointer is on the Reply/Forward button. Now I'll click it to reveal the options.\n"
+          },
+          {
+            "author": "iphone_agent",
+            "text": "Okay, I clicked the Reply/Forward button. A menu should have appeared with options like Reply, Reply All, and Forward.\n\nI need to take a screenshot to see the menu and locate the \"Forward\" option.\n"
+          },
+          {
+            "author": "iphone_agent",
+            "text": "Okay, I see the menu now. The \"Forward\" option is clearly visible.\n\nFirst, I'll locate the \"Forward\" button.\n"
+          },
+          {
+            "author": "iphone_agent",
+            "text": "Okay, I have located the \"Forward\" button. Now I will move the pointer to it.\n"
+          },
+          {
+            "author": "iphone_agent",
+            "text": "Okay, the pointer is on the \"Forward\" button. Now I'll click it to start forwarding the email.\n"
+          }
+        ],
+        "reference": "Okay, I've initiated the forward process for the email. Now I need to know your dad's email address to send it to him. Could you please provide it?\n"
+      },
+      {
+        "query": "His name is Bart Pauw, it should pop up somewhere",
+        "expected_tool_use": [
+          {
+            "tool_name": "take_screenshot",
+            "tool_input": {
+              "explanation": "Taking a screenshot to locate the 'To' field in the email draft."
+            }
+          },
+          {
+            "tool_name": "locate_UI_elements",
+            "tool_input": {
+              "explanation": "Locating the 'Include' button to ensure the attachment is forwarded.",
+              "query": "Include button"
+            }
+          },
+          {
+            "tool_name": "move_pointer",
+            "tool_input": {
+              "y": 144,
+              "explanation": "Moving the pointer to the 'Include' button.",
+              "x": 154
+            }
+          },
+          {
+            "tool_name": "click_pointer",
+            "tool_input": {
+              "explanation": "Clicking the 'Include' button to include the attachment in the forwarded email."
+            }
+          },
+          {
+            "tool_name": "take_screenshot",
+            "tool_input": {
+              "explanation": "Taking a screenshot to locate the 'To' field in the email draft."
+            }
+          },
+          {
+            "tool_name": "locate_UI_elements",
+            "tool_input": {
+              "explanation": "Locating the 'To' field to enter the recipient's name.",
+              "query": "To field"
+            }
+          },
+          {
+            "tool_name": "move_pointer",
+            "tool_input": {
+              "explanation": "Moving the pointer to the 'To' field.",
+              "y": 492,
+              "x": 154
+            }
+          },
+          {
+            "tool_name": "click_pointer",
+            "tool_input": {
+              "explanation": "Clicking the 'To' field to activate it for entering the recipient's name."
+            }
+          },
+          {
+            "tool_name": "enter_keys",
+            "tool_input": {
+              "text": "Bart Pauw",
+              "explanation": "Entering 'Bart Pauw' into the 'To' field."
+            }
+          },
+          {
+            "tool_name": "take_screenshot",
+            "tool_input": {
+              "explanation": "Taking a screenshot to check for contact suggestions for 'Bart Pauw'."
+            }
+          },
+          {
+            "tool_name": "human_intervention",
+            "tool_input": {
+              "explanation": "Asking the user to confirm which email address belongs to their dad from the two suggestions found."
+            }
+          }
+        ],
+        "expected_intermediate_agent_responses": [
+          {
+            "author": "iphone_agent",
+            "text": "Okay, I will type \"Bart Pauw\" into the \"To\" field and see if his contact information pops up.\n\nFirst, I need to see the email composition screen to locate the \"To\" field.\n"
+          },
+          {
+            "author": "iphone_agent",
+            "text": "Okay, before I can enter your dad's name, the Mail app is asking if I should include the attachments from the original message. Since you want to forward the annual report, which is likely an attachment, I should select \"Include\".\n\nFirst, I'll locate the \"Include\" button.\n"
+          },
+          {
+            "author": "iphone_agent",
+            "text": "Okay, I've located the \"Include\" button. Now I'll move the pointer to it.\n"
+          },
+          {
+            "author": "iphone_agent",
+            "text": "Okay, the pointer is on the \"Include\" button. Now I'll click it to make sure the attachment is forwarded.\n"
+          },
+          {
+            "author": "iphone_agent",
+            "text": "Okay, I've included the attachment. Now I need to locate the \"To\" field to enter your dad's name.\n\nI'll take a screenshot to view the email composition screen.\n"
+          },
+          {
+            "author": "iphone_agent",
+            "text": "Okay, I see the email composition screen now. The \"To\" field is visible.\n\nFirst, I'll locate the \"To\" field.\n"
+          },
+          {
+            "author": "iphone_agent",
+            "text": "Okay, I have located the \"To\" field. Now I will move the pointer to it.\n"
+          },
+          {
+            "author": "iphone_agent",
+            "text": "Okay, the pointer is on the \"To\" field. Now I'll click it to activate the text input.\n"
+          },
+          {
+            "author": "iphone_agent",
+            "text": "Okay, the \"To\" field is selected. Now I will enter \"Bart Pauw\".\n"
+          },
+          {
+            "author": "iphone_agent",
+            "text": "Okay, I've entered \"Bart Pauw\". I need to see if his contact details popped up as a suggestion.\n\nI'll take a screenshot to see the suggestions.\n"
+          }
+        ],
+        "reference": "Okay, I see two email addresses listed for \"Bart Pauw\":\n1. genetics@gmail.com\n2. nauka.diagnostics@gmail.com\n\nWhich one is your dad's email address?\n"
+      },
+      {
+        "query": "The first one",
+        "expected_tool_use": [
+          {
+            "tool_name": "locate_UI_elements",
+            "tool_input": {
+              "explanation": "Locating the first suggested email address for Bart Pauw.",
+              "query": "genetics@gmail.com"
+            }
+          },
+          {
+            "tool_name": "move_pointer",
+            "tool_input": {
+              "x": 156,
+              "y": 385,
+              "explanation": "Moving the pointer to the first email suggestion, genetics@gmail.com."
+            }
+          },
+          {
+            "tool_name": "click_pointer",
+            "tool_input": {
+              "explanation": "Clicking the first email suggestion to add Bart Pauw's email address to the 'To' field."
+            }
+          },
+          {
+            "tool_name": "take_screenshot",
+            "tool_input": {
+              "explanation": "Taking a screenshot to verify the recipient and locate the Send button."
+            }
+          },
+          {
+            "tool_name": "locate_UI_elements",
+            "tool_input": {
+              "query": "Send button",
+              "explanation": "Locating the Send button (blue circle with upward arrow) to send the email."
+            }
+          },
+          {
+            "tool_name": "move_pointer",
+            "tool_input": {
+              "x": 277,
+              "y": 537,
+              "explanation": "Moving the pointer to the Send button."
+            }
+          },
+          {
+            "tool_name": "click_pointer",
+            "tool_input": {
+              "explanation": "Clicking the Send button to forward the email to Bart Pauw."
+            }
+          },
+          {
+            "tool_name": "human_intervention",
+            "tool_input": {
+              "explanation": "The email has been sent as requested. The task is complete."
+            }
+          }
+        ],
+        "expected_intermediate_agent_responses": [
+          {
+            "author": "iphone_agent",
+            "text": "Okay, I will select the first email address, genetics@gmail.com.\n\nFirst, I need to locate the first suggested email address.\n"
+          },
+          {
+            "author": "iphone_agent",
+            "text": "Okay, I have located the first email address, `genetics@gmail.com`. Now I'll move the pointer to it.\n"
+          },
+          {
+            "author": "iphone_agent",
+            "text": "Okay, the pointer is on the correct email address, `genetics@gmail.com`. Now I'll click it to select it.\n"
+          },
+          {
+            "author": "iphone_agent",
+            "text": "Okay, I've selected `genetics@gmail.com`. Now the email is ready to be sent.\n\nI'll take a screenshot to confirm the recipient is added and to locate the \"Send\" button.\n"
+          },
+          {
+            "author": "iphone_agent",
+            "text": "Okay, the screenshot confirms that \"Bart Pauw\" (using genetics@gmail.com) is in the \"To\" field. The email is ready to be sent. I see the Send button (blue circle with an upward arrow) in the top right corner.\n\nFirst, I'll locate the Send button.\n"
+          },
+          {
+            "author": "iphone_agent",
+            "text": "Okay, I have located the Send button. Now I will move the pointer to it.\n"
+          },
+          {
+            "author": "iphone_agent",
+            "text": "Okay, the pointer is on the Send button. Now I'll click it to send the email to your dad.\n"
+          }
+        ],
+        "reference": "Okay, I've clicked the Send button. The email with the Smartcash annual report (assuming it was the one from Emiel & Paul) has been forwarded to your dad, Bart Pauw, at `genetics@gmail.com`.\n\nIs there anything else I can help you with?\n"
+      }
+    ],
+    "initial_session": {
+      "state": {},
+      "app_name": "phone_agent",
+      "user_id": "user"
+    }
+  }
+]
