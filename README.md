@@ -36,6 +36,7 @@ Grant cursor the accessibility to:
 - Google Cloud Project with Vertex AI enabled
 - iPhone with screen mirroring capability
 - uv ([download here](https://docs.astral.sh/uv/getting-started/installation/))
+- Google adk ([install](https://google.github.io/adk-docs/))
 
 ## Installation
 
@@ -82,6 +83,16 @@ Update these values in your `.env` file based on your screen setup:
 
 ## Usage
 
+### Frontend interface
+
+Simply run the following command:
+
+```sh
+adk web
+```
+
+### Programmatically
+
 ```python
 from phone_agent.agent import root_agent
 
@@ -111,10 +122,6 @@ phone_agent/
 ```
 
 ## Known Issues
-
-### todo
-pip install google-adk[eval] does not work
-it should be pip install 'google-adk[eval]'. update the docs!
 
 ## Safety Features
 
