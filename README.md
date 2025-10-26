@@ -35,6 +35,7 @@ Grant cursor the accessibility to:
 - Python 3.12+
 - Google Cloud Project with Vertex AI enabled
 - iPhone with screen mirroring capability
+- uv ([download here](https://docs.astral.sh/uv/getting-started/installation/))
 
 ## Installation
 
@@ -59,17 +60,16 @@ cp phone_agent/.env.local phone_agent/.env
 
 4. **Install dependencies**
 ```sh
-pip install -e .
+uv sync
 ```
 
 ## Configuration
 
 ### Screen Mirroring Setup
 
-1. Connect your iPhone to your Mac
-2. Open QuickTime Player > File > New Movie Recording
-3. Select your iPhone as the camera source
-4. Position the mirrored display on your screen
+1. Connect your iPhone to your Mac through Screen Mirroring
+2. Position the mirrored display on your screen
+3. Calibrate the screen size and cropping settings (see below)
 
 ### Display Calibration
 
