@@ -4,9 +4,8 @@ An autonomous AI agent that controls your iPhone using Google's ADK (Agent Devel
 
 ## Demo
 
-https://github.com/user-attachments/assets/your-video-id-here.mp4
+https://github.com/user-attachments/assets/3e535db6-96ec-4ce8-83ca-b2af999fbe11
 
-*To update: Edit this README on GitHub and drag-drop your MP4 file here to replace this placeholder*
 
 ## Features
 
@@ -41,7 +40,7 @@ Grant cursor the accessibility to:
 
 1. **Clone the repository**
 ```sh
-git clone <repository-url>
+git clone https://github.com/Cascoopman/PhoneAgent.git
 cd PhoneAgent
 ```
 
